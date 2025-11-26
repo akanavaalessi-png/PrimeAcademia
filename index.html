@@ -2316,7 +2316,7 @@
             </div>
         </div>
     </footer>
-   <script>
+  <script>
     // Configuration EmailJS
     const EMAILJS_CONFIG = {
         serviceId: 'service_aowa00e',
@@ -2395,36 +2395,35 @@
         apiKey: DRIVE_CONFIG.apiKey
     };
 
-    // CONFIGURATION SIMPLIFIÉE POUR LES PUBLICITÉS
+    // NOUVELLE CONFIGURATION POUR LES PUBLICITÉS - SOLUTION FONCTIONNELLE
     const AD_CONFIG = {
+        // OPTION 1: URLs directes vers les images (RECOMMANDÉ)
+        directImages: [
+            {
+                name: "Publicité Éducation",
+                imageUrl: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=500&h=500&fit=crop",
+                link: "#"
+            },
+            {
+                name: "Promotion Livres",
+                imageUrl: "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=500&h=500&fit=crop", 
+                link: "#"
+            },
+            {
+                name: "Cours en Ligne",
+                imageUrl: "https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=500&h=500&fit=crop",
+                link: "#"
+            }
+        ],
+        // OPTION 2: Dossier Google Drive (Nécessite des étapes supplémentaires)
         driveFolderId: '1jJjzp5QXHff62638bspkBKT2zwhNPzdd',
         apiKey: DRIVE_CONFIG.apiKey,
         interval: 20000, // 20 secondes entre chaque publicité
-        notificationTime: 5000, // 5 secondes d'avertissement avant la pub
         currentAdIndex: 0,
         isAdActive: false,
-        isNotificationActive: false,
         adInterval: null,
-        notificationInterval: null,
-        adImages: [],
-        // PUBLICITÉS DE SECOURS GARANTIES
-        fallbackAds: [
-            {
-                name: "PrimeAcademia - Excellence Académique",
-                imageUrl: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&h=400&fit=crop",
-                viewUrl: "#"
-            },
-            {
-                name: "Livres Pédagogiques - Meilleures Notes", 
-                imageUrl: "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=600&h=400&fit=crop",
-                viewUrl: "#librairie"
-            },
-            {
-                name: "Réussite aux Examens - Méthodes Efficaces",
-                imageUrl: "https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=600&h=400&fit=crop",
-                viewUrl: "#articles"
-            }
-        ]
+        countdownInterval: null,
+        countdownTime: 5 // 5 secondes de compte à rebours
     };
 
     // Variables globales
@@ -2476,7 +2475,7 @@
     const adContainer = document.getElementById('ad-container');
     const adClose = document.getElementById('ad-close');
     const adImage = document.getElementById('ad-image');
-    const adModal = document.getElementById('ad-modal');
+    const adCountdown = document.getElementById('ad-countdown');
 
     // Configuration des pages
     const PAGES_CONFIG = {
@@ -2502,293 +2501,12 @@
         emailjs.init(EMAILJS_CONFIG.publicKey);
         loadFiles();
         loadBooks();
-        initializeAds();
+        initializeAds(); // NOUVELLE MÉTHODE POUR LES PUBLICITÉS
         setupEventListeners();
         startAutoRefresh();
         initializeTheme();
     });
 
-    // FONCTIONS POUR LES PUBLICITÉS AUTOMATIQUES
-
-    // NOTIFICATION AVANT LA PUBLICITÉ
-    function showAdNotification() {
-        if (AD_CONFIG.isNotificationActive) return;
-        
-        AD_CONFIG.isNotificationActive = true;
-        
-        const notification = document.createElement('div');
-        notification.id = 'ad-notification';
-        notification.innerHTML = `
-            <div style="display: flex; align-items: center; justify-content: space-between;">
-                <div style="display: flex; align-items: center;">
-                    <i class="fas fa-ad" style="color: var(--accent); margin-right: 10px;"></i>
-                    <span>Publicité dans <strong id="ad-countdown">5</strong> secondes</span>
-                </div>
-                <button id="skip-ad" style="background: none; border: none; color: var(--gray); cursor: pointer;" title="Passer cette publicité">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        `;
-        
-        notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--card-bg);
-            color: var(--text-color);
-            padding: 15px 20px;
-            border-radius: var(--border-radius);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            border-left: 4px solid var(--accent);
-            z-index: 10000;
-            max-width: 300px;
-            font-size: 0.9rem;
-            transition: transform 0.3s ease;
-        `;
-        
-        document.body.appendChild(notification);
-        
-        let countdown = 5;
-        const countdownElement = document.getElementById('ad-countdown');
-        const countdownInterval = setInterval(() => {
-            countdown--;
-            countdownElement.textContent = countdown;
-            
-            if (countdown <= 0) {
-                clearInterval(countdownInterval);
-                closeAdNotification();
-                showNextAd();
-            }
-        }, 1000);
-        
-        // Bouton pour passer la publicité
-        document.getElementById('skip-ad').addEventListener('click', function() {
-            clearInterval(countdownInterval);
-            closeAdNotification();
-            AD_CONFIG.isNotificationActive = false;
-        });
-        
-        AD_CONFIG.notificationInterval = countdownInterval;
-    }
-
-    function closeAdNotification() {
-        const notification = document.getElementById('ad-notification');
-        if (notification) {
-            notification.style.transform = 'translateX(100%)';
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.parentNode.removeChild(notification);
-                }
-            }, 300);
-        }
-        AD_CONFIG.isNotificationActive = false;
-    }
-
-    // SYSTÈME DE PUBLICITÉS AUTOMATIQUE
-    function startAdRotation() {
-        if (AD_CONFIG.adImages.length === 0) {
-            console.log("❌ Aucune publicité à afficher - utilisation des publicités de secours");
-            AD_CONFIG.adImages = AD_CONFIG.fallbackAds;
-        }
-
-        console.log("🔄 Démarrage de la rotation des publicités - 20 secondes");
-
-        if (AD_CONFIG.adInterval) {
-            clearInterval(AD_CONFIG.adInterval);
-        }
-
-        // Première publicité après 10 secondes
-        setTimeout(() => {
-            showAdNotification();
-        }, 10000);
-
-        // Publicités suivantes toutes les 20 secondes
-        AD_CONFIG.adInterval = setInterval(() => {
-            if (!AD_CONFIG.isAdActive && !AD_CONFIG.isNotificationActive) {
-                showAdNotification();
-            }
-        }, AD_CONFIG.interval);
-    }
-
-    function showNextAd() {
-        // GARANTIR qu'on a toujours des publicités à afficher
-        if (AD_CONFIG.adImages.length === 0) {
-            AD_CONFIG.adImages = AD_CONFIG.fallbackAds;
-        }
-        
-        if (AD_CONFIG.isAdActive) return;
-
-        const ad = AD_CONFIG.adImages[AD_CONFIG.currentAdIndex];
-        console.log(`🖼️ Tentative d'affichage de: ${ad.name}`);
-
-        // Créer une image pour tester le chargement
-        const testImage = new Image();
-        
-        testImage.onload = function() {
-            console.log(`✅ Publicité chargée avec succès: ${ad.name}`);
-            displayAd(ad);
-        };
-        
-        testImage.onerror = function() {
-            console.error(`❌ Erreur de chargement de: ${ad.name}`);
-            // Essayer avec une URL alternative
-            const fallbackUrl = `https://drive.google.com/thumbnail?id=${ad.id}&sz=w1000`;
-            console.log(`🔄 Essai avec URL alternative: ${fallbackUrl}`);
-            
-            const fallbackImage = new Image();
-            fallbackImage.onload = function() {
-                console.log(`✅ Chargement réussi avec URL alternative`);
-                displayAd({...ad, imageUrl: fallbackUrl});
-            };
-            
-            fallbackImage.onerror = function() {
-                console.error(`❌ Échec complet du chargement`);
-                // Utiliser une publicité de secours
-                const fallbackAd = AD_CONFIG.fallbackAds[AD_CONFIG.currentAdIndex % AD_CONFIG.fallbackAds.length];
-                console.log(`🆘 Utilisation de la publicité de secours: ${fallbackAd.name}`);
-                displayAd(fallbackAd);
-            };
-            
-            fallbackImage.src = fallbackUrl;
-        };
-        
-        testImage.src = ad.imageUrl;
-    }
-
-    // FONCTION POUR AFFICHER LA PUBLICITÉ
-    function displayAd(ad) {
-        adImage.src = ad.imageUrl;
-        adImage.alt = ad.name;
-        adImage.style.display = 'block';
-        adImage.style.cursor = ad.viewUrl && ad.viewUrl !== '#' ? 'pointer' : 'default';
-        
-        // Ajouter un indicateur de temps
-        const timerElement = document.createElement('div');
-        timerElement.id = 'ad-timer';
-        timerElement.innerHTML = `<i class="fas fa-times"></i>`;
-        timerElement.style.cssText = `
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(0,0,0,0.7);
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 0.9rem;
-        `;
-        
-        adModal.appendChild(timerElement);
-        
-        adContainer.style.display = 'flex';
-        AD_CONFIG.isAdActive = true;
-        
-        // Fermer automatiquement après 10 secondes
-        const autoCloseTimer = setTimeout(() => {
-            if (AD_CONFIG.isAdActive) {
-                closeAd();
-            }
-        }, 10000);
-        
-        // Bouton de fermeture manuelle
-        timerElement.addEventListener('click', function() {
-            clearTimeout(autoCloseTimer);
-            closeAd();
-        });
-
-        // Cliquer sur l'image pour ouvrir le lien
-        adImage.addEventListener('click', function() {
-            if (ad.viewUrl && ad.viewUrl !== '#') {
-                window.open(ad.viewUrl, '_blank');
-                closeAd();
-            }
-        });
-
-        // Passer à la publicité suivante
-        AD_CONFIG.currentAdIndex = (AD_CONFIG.currentAdIndex + 1) % AD_CONFIG.adImages.length;
-    }
-
-    function closeAd() {
-        console.log("🔒 Fermeture de la publicité");
-        adContainer.style.display = 'none';
-        AD_CONFIG.isAdActive = false;
-        adImage.src = '';
-        
-        // Nettoyer le timer
-        const timerElement = document.getElementById('ad-timer');
-        if (timerElement && timerElement.parentNode) {
-            timerElement.parentNode.removeChild(timerElement);
-        }
-    }
-
-    // FONCTION POUR CHARGER LES PUBLICITÉS DEPUIS GOOGLE DRIVE
-    async function loadAdsFromDrive() {
-        try {
-            console.log("🔄 Chargement des publicités depuis Google Drive...");
-            
-            if (!AD_CONFIG.driveFolderId || AD_CONFIG.driveFolderId === '1jJjzp5QXHff62638bspkBKT2zwhNPzdd') {
-                console.log("❌ Dossier de publicités non configuré ou invalide");
-                AD_CONFIG.adImages = AD_CONFIG.fallbackAds;
-                startAdRotation();
-                return;
-            }
-
-            const response = await fetch(
-                `https://www.googleapis.com/drive/v3/files?q='${AD_CONFIG.driveFolderId}' in parents and trashed=false&key=${AD_CONFIG.apiKey}&fields=files(id,name,mimeType,webViewLink)`
-            );
-
-            if (!response.ok) {
-                throw new Error(`Erreur API: ${response.status}`);
-            }
-
-            const data = await response.json();
-            console.log("📁 Fichiers trouvés dans Google Drive:", data.files);
-
-            if (data.files && data.files.length > 0) {
-                const imageFiles = data.files.filter(file => file.mimeType.startsWith('image/'));
-                console.log(`📸 ${imageFiles.length} image(s) trouvée(s)`);
-                
-                if (imageFiles.length > 0) {
-                    AD_CONFIG.adImages = imageFiles.map(file => ({
-                        id: file.id,
-                        name: file.name,
-                        // ESSAYER PLUSIEURS FORMATS D'URL
-                        imageUrl: `https://drive.google.com/uc?export=view&id=${file.id}`,
-                        alternativeUrl: `https://lh3.googleusercontent.com/d/${file.id}=w1000`,
-                        thumbnailUrl: `https://drive.google.com/thumbnail?id=${file.id}&sz=w1000`,
-                        viewUrl: file.webViewLink
-                    }));
-                    
-                    console.log(`✅ ${AD_CONFIG.adImages.length} publicité(s) chargée(s) depuis Google Drive`);
-                } else {
-                    console.log("📭 Aucune image trouvée dans le dossier");
-                    AD_CONFIG.adImages = AD_CONFIG.fallbackAds;
-                }
-            } else {
-                console.log("📭 Dossier de publicités vide");
-                AD_CONFIG.adImages = AD_CONFIG.fallbackAds;
-            }
-
-        } catch (error) {
-            console.error('❌ Erreur lors du chargement des publicités depuis Google Drive:', error);
-            AD_CONFIG.adImages = AD_CONFIG.fallbackAds;
-        }
-        
-        // DÉMARRER LA ROTATION QUOI QU'IL ARRIVE
-        startAdRotation();
-    }
-
-    // INITIALISATION DES PUBLICITÉS
-    function initializeAds() {
-        console.log("🔄 Initialisation du système de publicités...");
-        loadAdsFromDrive();
-    }
-
-    // [LE RESTE DU CODE RESTE IDENTIQUE - setupEventListeners, handleFileDownload, etc.]
     // Configuration des écouteurs d'événements
     function setupEventListeners() {
         // Navigation principale
@@ -2896,6 +2614,142 @@
         adModal.addEventListener('click', function(e) {
             e.stopPropagation();
         });
+
+        // Cliquer sur la publicité pour ouvrir le lien
+        adImage.addEventListener('click', function() {
+            const currentAd = AD_CONFIG.directImages[AD_CONFIG.currentAdIndex];
+            if (currentAd && currentAd.link && currentAd.link !== '#') {
+                window.open(currentAd.link, '_blank');
+                closeAd();
+            }
+        });
+    }
+
+    // NOUVELLE MÉTHODE SIMPLIFIÉE POUR LES PUBLICITÉS
+    function initializeAds() {
+        console.log("🔄 Initialisation du système de publicités...");
+        
+        // Vérifier qu'on a des publicités à afficher
+        if (AD_CONFIG.directImages.length === 0) {
+            console.log("❌ Aucune publicité configurée");
+            return;
+        }
+
+        console.log(`✅ ${AD_CONFIG.directImages.length} publicité(s) prête(s) à être affichée(s)`);
+
+        // Démarrer la rotation des publicités après un délai initial
+        setTimeout(() => {
+            startAdRotation();
+        }, 10000); // Première publicité après 10 secondes
+    }
+
+    function startAdRotation() {
+        if (AD_CONFIG.directImages.length === 0) {
+            console.log("❌ Aucune publicité à afficher");
+            return;
+        }
+
+        console.log("🔄 Démarrage de la rotation des publicités");
+
+        // Nettoyer l'intervalle existant
+        if (AD_CONFIG.adInterval) {
+            clearInterval(AD_CONFIG.adInterval);
+        }
+
+        // Afficher la première publicité
+        showNextAd();
+
+        // Configurer l'intervalle pour les publicités suivantes
+        AD_CONFIG.adInterval = setInterval(() => {
+            if (!AD_CONFIG.isAdActive) {
+                showNextAd();
+            }
+        }, AD_CONFIG.interval);
+    }
+
+    function showNextAd() {
+        if (AD_CONFIG.directImages.length === 0) return;
+        if (AD_CONFIG.isAdActive) return;
+
+        const ad = AD_CONFIG.directImages[AD_CONFIG.currentAdIndex];
+        console.log(`🖼️ Affichage de la publicité: ${ad.name}`);
+
+        // Créer une image pour précharger
+        const img = new Image();
+        
+        img.onload = function() {
+            console.log(`✅ Publicité chargée avec succès: ${ad.name}`);
+            
+            // Démarrer le compte à rebours de 5 secondes
+            startCountdown(ad);
+        };
+        
+        img.onerror = function() {
+            console.error(`❌ Erreur de chargement de la publicité: ${ad.name}`);
+            // Passer à la publicité suivante même en cas d'erreur
+            AD_CONFIG.currentAdIndex = (AD_CONFIG.currentAdIndex + 1) % AD_CONFIG.directImages.length;
+        };
+        
+        img.src = ad.imageUrl;
+    }
+
+    // NOUVELLE FONCTION : Compte à rebours avant affichage de la pub
+    function startCountdown(ad) {
+        let countdown = AD_CONFIG.countdownTime;
+        AD_CONFIG.isAdActive = true;
+        
+        // Afficher le conteneur de pub avec le compte à rebours
+        adContainer.style.display = 'flex';
+        adImage.style.display = 'none';
+        adCountdown.style.display = 'block';
+        adCountdown.textContent = `Publicité dans ${countdown}s`;
+        adClose.style.display = 'none'; // Cacher le bouton fermer pendant le compte à rebours
+
+        // Démarrer le compte à rebours
+        AD_CONFIG.countdownInterval = setInterval(() => {
+            countdown--;
+            adCountdown.textContent = `Publicité dans ${countdown}s`;
+            
+            if (countdown <= 0) {
+                clearInterval(AD_CONFIG.countdownInterval);
+                showAdAfterCountdown(ad);
+            }
+        }, 1000);
+    }
+
+    // NOUVELLE FONCTION : Afficher la pub après le compte à rebours
+    function showAdAfterCountdown(ad) {
+        // Afficher l'image de la publicité
+        adImage.src = ad.imageUrl;
+        adImage.alt = ad.name;
+        adImage.style.display = 'block';
+        adImage.style.cursor = ad.link && ad.link !== '#' ? 'pointer' : 'default';
+        
+        // Cacher le compte à rebours et afficher le bouton fermer
+        adCountdown.style.display = 'none';
+        adClose.style.display = 'block';
+        
+        // Fermer automatiquement après 8 secondes
+        setTimeout(() => {
+            if (AD_CONFIG.isAdActive) {
+                closeAd();
+            }
+        }, 8000);
+        
+        // Passer à la publicité suivante pour le prochain tour
+        AD_CONFIG.currentAdIndex = (AD_CONFIG.currentAdIndex + 1) % AD_CONFIG.directImages.length;
+    }
+
+    function closeAd() {
+        console.log("🔒 Fermeture de la publicité");
+        adContainer.style.display = 'none';
+        AD_CONFIG.isAdActive = false;
+        adImage.src = '';
+        
+        // Nettoyer l'intervalle de compte à rebours s'il existe
+        if (AD_CONFIG.countdownInterval) {
+            clearInterval(AD_CONFIG.countdownInterval);
+        }
     }
 
     // Gestion du téléchargement avec demande de don
@@ -2932,6 +2786,7 @@
         closeDonationModal();
     }
 
+    // [RESTE DU CODE IDENTIQUE - gestion des fichiers, livres, formulaire, etc.]
     // Formulaire de contact
     function handleContactForm(e) {
         e.preventDefault();
@@ -3443,6 +3298,7 @@
 </html>
 
    
+
 
 
 
