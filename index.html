@@ -2316,7 +2316,7 @@
             </div>
         </div>
     </footer>
-  <script>
+ <script>
     // Configuration EmailJS
     const EMAILJS_CONFIG = {
         serviceId: 'service_aowa00e',
@@ -2421,9 +2421,7 @@
         interval: 20000, // 20 secondes entre chaque publicité
         currentAdIndex: 0,
         isAdActive: false,
-        adInterval: null,
-        countdownInterval: null,
-        countdownTime: 5 // 5 secondes de compte à rebours
+        adInterval: null
     };
 
     // Variables globales
@@ -2475,7 +2473,6 @@
     const adContainer = document.getElementById('ad-container');
     const adClose = document.getElementById('ad-close');
     const adImage = document.getElementById('ad-image');
-    const adCountdown = document.getElementById('ad-countdown');
 
     // Configuration des pages
     const PAGES_CONFIG = {
@@ -2680,8 +2677,22 @@
         img.onload = function() {
             console.log(`✅ Publicité chargée avec succès: ${ad.name}`);
             
-            // Démarrer le compte à rebours de 5 secondes
-            startCountdown(ad);
+            // Afficher la publicité
+            adImage.src = ad.imageUrl;
+            adImage.alt = ad.name;
+            adImage.style.display = 'block';
+            adImage.style.cursor = ad.link && ad.link !== '#' ? 'pointer' : 'default';
+            
+            // Afficher le conteneur
+            adContainer.style.display = 'flex';
+            AD_CONFIG.isAdActive = true;
+            
+            // Fermer automatiquement après 8 secondes
+            setTimeout(() => {
+                if (AD_CONFIG.isAdActive) {
+                    closeAd();
+                }
+            }, 8000);
         };
         
         img.onerror = function() {
@@ -2691,50 +2702,6 @@
         };
         
         img.src = ad.imageUrl;
-    }
-
-    // NOUVELLE FONCTION : Compte à rebours avant affichage de la pub
-    function startCountdown(ad) {
-        let countdown = AD_CONFIG.countdownTime;
-        AD_CONFIG.isAdActive = true;
-        
-        // Afficher le conteneur de pub avec le compte à rebours
-        adContainer.style.display = 'flex';
-        adImage.style.display = 'none';
-        adCountdown.style.display = 'block';
-        adCountdown.textContent = `Publicité dans ${countdown}s`;
-        adClose.style.display = 'none'; // Cacher le bouton fermer pendant le compte à rebours
-
-        // Démarrer le compte à rebours
-        AD_CONFIG.countdownInterval = setInterval(() => {
-            countdown--;
-            adCountdown.textContent = `Publicité dans ${countdown}s`;
-            
-            if (countdown <= 0) {
-                clearInterval(AD_CONFIG.countdownInterval);
-                showAdAfterCountdown(ad);
-            }
-        }, 1000);
-    }
-
-    // NOUVELLE FONCTION : Afficher la pub après le compte à rebours
-    function showAdAfterCountdown(ad) {
-        // Afficher l'image de la publicité
-        adImage.src = ad.imageUrl;
-        adImage.alt = ad.name;
-        adImage.style.display = 'block';
-        adImage.style.cursor = ad.link && ad.link !== '#' ? 'pointer' : 'default';
-        
-        // Cacher le compte à rebours et afficher le bouton fermer
-        adCountdown.style.display = 'none';
-        adClose.style.display = 'block';
-        
-        // Fermer automatiquement après 8 secondes
-        setTimeout(() => {
-            if (AD_CONFIG.isAdActive) {
-                closeAd();
-            }
-        }, 8000);
         
         // Passer à la publicité suivante pour le prochain tour
         AD_CONFIG.currentAdIndex = (AD_CONFIG.currentAdIndex + 1) % AD_CONFIG.directImages.length;
@@ -2745,11 +2712,6 @@
         adContainer.style.display = 'none';
         AD_CONFIG.isAdActive = false;
         adImage.src = '';
-        
-        // Nettoyer l'intervalle de compte à rebours s'il existe
-        if (AD_CONFIG.countdownInterval) {
-            clearInterval(AD_CONFIG.countdownInterval);
-        }
     }
 
     // Gestion du téléchargement avec demande de don
@@ -3298,6 +3260,7 @@
 </html>
 
    
+
 
 
 
