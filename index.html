@@ -1047,14 +1047,14 @@
             color: var(--light);
         }
 
-        /* Styles pour les publicités flottantes - CORRIGÉS */
+        /* Styles pour les publicités flottantes - FORMAT AGRANDI */
         #ad-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7); /* Fond semi-transparent au lieu de noir opaque */
+            background-color: rgba(0, 0, 0, 0.8);
             z-index: 9999;
             display: none;
             align-items: center;
@@ -1067,8 +1067,10 @@
             background-color: white;
             border-radius: 15px;
             padding: 0;
-            max-width: 90vw;
-            max-height: 90vh;
+            width: 90vw;
+            max-width: 800px; /* Format agrandi */
+            height: 85vh;
+            max-height: 700px; /* Format agrandi */
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
             overflow: hidden;
             animation: modalAppear 0.3s ease-out;
@@ -1107,20 +1109,21 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            max-width: 100%;
-            max-height: 100%;
+            width: 100%;
+            height: 100%;
         }
 
         #ad-image {
             max-width: 100%;
-            max-height: 80vh;
+            max-height: 100%;
+            width: auto;
+            height: auto;
             display: block;
-            border-radius: 8px;
             cursor: pointer;
             object-fit: contain;
         }
 
-        /* Styles pour le compte à rebours des publicités - CORRIGÉ */
+        /* Styles pour le compte à rebours des publicités */
         #ad-countdown {
             position: absolute;
             top: 50%;
@@ -1171,6 +1174,106 @@
             margin-bottom: 15px;
         }
 
+        /* Modal de partage */
+        #share-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .share-modal-content {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            animation: modalAppear 0.3s ease-out;
+        }
+
+        .share-modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .share-modal-icon {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .share-modal-icon i {
+            font-size: 3rem;
+            color: var(--accent);
+        }
+
+        .share-modal-content h2 {
+            text-align: center;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .share-modal-content p {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--secondary);
+        }
+
+        .share-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .share-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+            border: 2px solid var(--light);
+            border-radius: 10px;
+            background: none;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            color: var(--primary);
+        }
+
+        .share-option:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .share-option i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .share-option.whatsapp i { color: #25D366; }
+        .share-option.facebook i { color: #3b5998; }
+        .share-option.twitter i { color: #1DA1F2; }
+        .share-option.telegram i { color: #0088cc; }
+        .share-option.link i { color: var(--accent); }
+
+        .share-modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .header-content {
@@ -1210,6 +1313,15 @@
                 align-items: center;
                 gap: 1rem;
             }
+            
+            #ad-modal {
+                width: 95vw;
+                height: 80vh;
+            }
+            
+            .share-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
     </style>
 </head>
@@ -1246,7 +1358,48 @@
         </div>
     </div>
 
-    <!-- Container pour les publicités flottantes - CORRIGÉ -->
+    <!-- Modal de partage -->
+    <div class="modal" id="share-modal">
+        <div class="share-modal-content">
+            <button class="share-modal-close" id="share-modal-close">&times;</button>
+            <div class="share-modal-icon">
+                <i class="fas fa-share-alt"></i>
+            </div>
+            <h2>Partager PrimeAcademia</h2>
+            <p>Aidez d'autres étudiants à découvrir cette ressource gratuite ! Partagez PrimeAcademia sur vos réseaux.</p>
+            
+            <div class="share-options">
+                <a href="#" class="share-option whatsapp" id="share-whatsapp">
+                    <i class="fab fa-whatsapp"></i>
+                    <span>WhatsApp</span>
+                </a>
+                <a href="#" class="share-option facebook" id="share-facebook">
+                    <i class="fab fa-facebook"></i>
+                    <span>Facebook</span>
+                </a>
+                <a href="#" class="share-option twitter" id="share-twitter">
+                    <i class="fab fa-twitter"></i>
+                    <span>Twitter</span>
+                </a>
+                <a href="#" class="share-option telegram" id="share-telegram">
+                    <i class="fab fa-telegram"></i>
+                    <span>Telegram</span>
+                </a>
+                <a href="#" class="share-option link" id="share-link">
+                    <i class="fas fa-link"></i>
+                    <span>Copier le lien</span>
+                </a>
+            </div>
+            
+            <div class="share-modal-actions">
+                <button class="btn btn-primary" id="share-continue">
+                    <i class="fas fa-check"></i> Continuer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Container pour les publicités flottantes - FORMAT AGRANDI -->
     <div id="ad-container">
         <div id="ad-modal">
             <button id="ad-close">&times;</button>
@@ -1257,7 +1410,7 @@
                 </div>
                 <img id="ad-image" src="" alt="Publicité" style="display: none;">
             </div>
-            <!-- Élément pour le compte à rebours - CORRIGÉ -->
+            <!-- Élément pour le compte à rebours -->
             <div id="ad-countdown" style="display: none;"></div>
         </div>
     </div>
@@ -2547,7 +2700,7 @@
             apiKey: DRIVE_CONFIG.apiKey
         };
 
-        // Configuration pour les publicités - CORRIGÉE
+        // Configuration pour les publicités - FORMAT AGRANDI
         const AD_CONFIG = {
             driveFolderId: '1jJjzp5QXHff62638bspkBKT2zwhNPzdd',
             apiKey: DRIVE_CONFIG.apiKey,
@@ -2577,6 +2730,14 @@
             'contact': 'contact-page',
             'privacy': 'privacy-page',
             'legal': 'legal-page'
+        };
+
+        // Configuration du partage
+        const SHARE_CONFIG = {
+            url: window.location.href,
+            title: 'PrimeAcademia - Plateforme d\'Épreuves Académiques',
+            description: 'Découvrez PrimeAcademia, la plateforme gratuite d\'épreuves académiques organisées par filière et année. Outils de préparation et conseils pour la réussite étudiante.',
+            hashtags: 'éducation,étudiants,réussite,examens'
         };
 
         // =============================================
@@ -2648,7 +2809,17 @@
         const amountValue = document.getElementById('amount-value');
         const whatsappDonation = document.getElementById('whatsapp-donation');
 
-        // Publicités - CORRIGÉ
+        // Modal de partage
+        const shareModal = document.getElementById('share-modal');
+        const shareModalClose = document.getElementById('share-modal-close');
+        const shareContinue = document.getElementById('share-continue');
+        const shareWhatsapp = document.getElementById('share-whatsapp');
+        const shareFacebook = document.getElementById('share-facebook');
+        const shareTwitter = document.getElementById('share-twitter');
+        const shareTelegram = document.getElementById('share-telegram');
+        const shareLink = document.getElementById('share-link');
+
+        // Publicités - FORMAT AGRANDI
         const adContainer = document.getElementById('ad-container');
         const adClose = document.getElementById('ad-close');
         const adImage = document.getElementById('ad-image');
@@ -2690,6 +2861,7 @@
             setupArticles();
             setupContactForm();
             setupDonationModal();
+            setupShareModal();
             setupAds();
             setupTheme();
         }
@@ -2792,6 +2964,43 @@
             if (donationModal) {
                 donationModal.addEventListener('click', function(e) {
                     if (e.target === donationModal) closeDonationModal();
+                });
+            }
+        }
+
+        function setupShareModal() {
+            if (shareModalClose) shareModalClose.addEventListener('click', closeShareModal);
+            if (shareContinue) shareContinue.addEventListener('click', closeShareModal);
+            
+            // Configuration des liens de partage
+            if (shareWhatsapp) {
+                shareWhatsapp.href = `https://wa.me/?text=${encodeURIComponent(SHARE_CONFIG.title + ' - ' + SHARE_CONFIG.description + ' ' + SHARE_CONFIG.url)}`;
+            }
+            
+            if (shareFacebook) {
+                shareFacebook.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(SHARE_CONFIG.url)}`;
+            }
+            
+            if (shareTwitter) {
+                shareTwitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(SHARE_CONFIG.title)}&url=${encodeURIComponent(SHARE_CONFIG.url)}&hashtags=${SHARE_CONFIG.hashtags}`;
+            }
+            
+            if (shareTelegram) {
+                shareTelegram.href = `https://t.me/share/url?url=${encodeURIComponent(SHARE_CONFIG.url)}&text=${encodeURIComponent(SHARE_CONFIG.title + ' - ' + SHARE_CONFIG.description)}`;
+            }
+            
+            if (shareLink) {
+                shareLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    navigator.clipboard.writeText(SHARE_CONFIG.url).then(() => {
+                        alert('Lien copié dans le presse-papiers !');
+                    });
+                });
+            }
+
+            if (shareModal) {
+                shareModal.addEventListener('click', function(e) {
+                    if (e.target === shareModal) closeShareModal();
                 });
             }
         }
@@ -3192,7 +3401,7 @@
         }
 
         // =============================================
-        // SYSTÈME DE PUBLICITÉS - CORRIGÉ
+        // SYSTÈME DE PUBLICITÉS - FORMAT AGRANDI
         // =============================================
 
         function initializeAds() {
@@ -3223,7 +3432,7 @@
                         .map(file => ({
                             id: file.id,
                             name: file.name,
-                            // URL directe pour l'affichage - CORRIGÉ
+                            // URL directe pour l'affichage
                             imageUrl: `https://lh3.googleusercontent.com/d/${file.id}=w800`,
                             // URL alternative
                             imageUrlAlt: `https://drive.google.com/uc?export=view&id=${file.id}`,
@@ -3331,9 +3540,8 @@
             // Afficher le compte à rebours avec le message demandé - AVANT l'image
             adCountdown.style.display = 'block';
             adCountdown.innerHTML = `
-                <div style="font-size: 20px; margin-bottom: 10px;">PUB, C'est la PUB</div>
+                <div style="font-size: 20px; margin-bottom: 10px;">Espace publicitaire - la pub arrive dans...</div>
                 <div style="font-size: 36px; margin: 15px 0; font-weight: bold;">${countdown}s</div>
-                <div style="font-size: 16px;">Avant la publicité</div>
             `;
 
             console.log(`⏱️ Début du compte à rebours: ${countdown} secondes`);
@@ -3342,9 +3550,8 @@
             AD_CONFIG.countdownInterval = setInterval(() => {
                 countdown--;
                 adCountdown.innerHTML = `
-                    <div style="font-size: 20px; margin-bottom: 10px;">PUB, C'est la PUB</div>
+                    <div style="font-size: 20px; margin-bottom: 10px;">Espace publicitaire - la pub arrive dans...</div>
                     <div style="font-size: 36px; margin: 15px 0; font-weight: bold;">${countdown}s</div>
-                    <div style="font-size: 16px;">Avant la publicité</div>
                 `;
                 
                 if (countdown <= 0) {
@@ -3398,7 +3605,7 @@
         }
 
         // =============================================
-        // FONCTIONNALITÉS DE TÉLÉCHARGEMENT
+        // FONCTIONNALITÉS DE TÉLÉCHARGEMENT ET PARTAGE
         // =============================================
 
         function handleFileDownload(downloadLink, fileName) {
@@ -3449,12 +3656,29 @@
                 document.body.appendChild(tempLink);
                 tempLink.click();
                 document.body.removeChild(tempLink);
+                
+                // Afficher le modal de partage après le téléchargement
+                setTimeout(() => {
+                    showShareModal();
+                }, 1000);
             }
             closeDonationModal();
         }
 
+        function showShareModal() {
+            if (shareModal) {
+                shareModal.style.display = 'flex';
+            }
+        }
+
+        function closeShareModal() {
+            if (shareModal) {
+                shareModal.style.display = 'none';
+            }
+        }
+
         // =============================================
-        // FORMULAIRE DE CONTACT - CORRECTION FORMSPREE
+        // FORMULAIRE DE CONTACT
         // =============================================
 
         function handleContactForm(e) {
