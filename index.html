@@ -2316,8 +2316,7 @@
             </div>
         </div>
     </footer>
-
-    <script>
+<script>
     // Configuration EmailJS
     const EMAILJS_CONFIG = {
         serviceId: 'service_aowa00e',
@@ -2396,13 +2395,14 @@
         apiKey: DRIVE_CONFIG.apiKey
     };
 
-    // Configuration pour les publicités - CORRECTION ICI
+    // Configuration pour les publicités
     const AD_CONFIG = {
-        folderId: '1jJjzp5QXHff62638bspkBKT2zwhNPzdd', // À remplacer par l'ID de votre dossier Google Drive pour les publicités
+        folderId: '1jJjzp5QXHff62638bspkBKT2zwhNPzdd',
         apiKey: DRIVE_CONFIG.apiKey,
-        interval: 15000, // 15 secondes entre chaque publicité
+        interval: 15000,
         currentAdIndex: 0,
-        adImages: []
+        adImages: [],
+        isAdActive: false
     };
 
     // Variables globales
@@ -2410,7 +2410,8 @@
     let booksData = [];
     let currentView = 'table';
     let refreshInterval;
-    let updateCounter = 24 * 60 * 60; // 24 heures en secondes
+    let updateCounter = 24 * 60 * 60;
+    let adInterval;
 
     // Éléments DOM
     const loadingElement = document.getElementById('loading');
@@ -2440,14 +2441,9 @@
     const booksLoading = document.getElementById('books-loading');
     const booksError = document.getElementById('books-error');
     const booksRetryBtn = document.getElementById('books-retry-btn');
-
-    // Nouveaux éléments pour la section intro
     const introCollapsed = document.getElementById('intro-collapsed');
     const introExpanded = document.getElementById('intro-expanded');
-    const introToggle = document.getElementById('intro-toggle');
     const introClose = document.getElementById('intro-close');
-
-    // Éléments pour le modal de don
     const donationModal = document.getElementById('donation-modal');
     const modalClose = document.getElementById('modal-close');
     const cancelDownload = document.getElementById('cancel-download');
@@ -2456,10 +2452,7 @@
     const selectedAmount = document.getElementById('selected-amount');
     const amountValue = document.getElementById('amount-value');
     const whatsappDonation = document.getElementById('whatsapp-donation');
-
-    // Éléments pour les publicités
     const adContainer = document.getElementById('ad-container');
-    const adModal = document.getElementById('ad-modal');
     const adClose = document.getElementById('ad-close');
     const adImage = document.getElementById('ad-image');
 
@@ -2484,12 +2477,10 @@
 
     // Initialisation
     document.addEventListener('DOMContentLoaded', function () {
-        // Initialiser EmailJS
         emailjs.init(EMAILJS_CONFIG.publicKey);
-        
         loadFiles();
         loadBooks();
-        loadAds(); // Charger les publicités
+        loadAds();
         setupEventListeners();
         startAutoRefresh();
         initializeTheme();
@@ -2503,13 +2494,12 @@
                 e.preventDefault();
                 const page = this.getAttribute('data-page');
                 switchPage(page);
-
                 navLinks.forEach(l => l.classList.remove('active'));
                 this.classList.add('active');
             });
         });
 
-        // Événements pour la section intro
+        // Section intro
         introCollapsed.addEventListener('click', function() {
             introCollapsed.style.display = 'none';
             introExpanded.style.display = 'block';
@@ -2521,141 +2511,100 @@
             introCollapsed.style.display = 'block';
         });
 
-        // Événements pour les liens "Lire la suite"
+        // Articles
         document.querySelectorAll('.read-more').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
                 const article = this.getAttribute('data-article');
                 switchPage(article);
-                
-                // Mettre à jour la navigation active
                 navLinks.forEach(l => l.classList.remove('active'));
                 document.querySelector('[data-page="articles"]').classList.add('active');
             });
         });
 
-        // Événements pour les boutons "Retour aux articles"
         document.querySelectorAll('.back-to-articles').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
                 switchPage('articles');
-                
-                // Mettre à jour la navigation active
                 navLinks.forEach(l => l.classList.remove('active'));
                 document.querySelector('[data-page="articles"]').classList.add('active');
             });
         });
 
-        // Événements pour les liens du footer
-        document.querySelectorAll('footer .nav-link').forEach(link => {
+        // Footer
+        document.querySelectorAll('footer .nav-link, .legal-links .nav-link').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
                 const page = this.getAttribute('data-page');
                 switchPage(page);
-                
-                // Mettre à jour la navigation active
                 navLinks.forEach(l => l.classList.remove('active'));
                 const mainNavLink = document.querySelector(`nav [data-page="${page}"]`);
-                if (mainNavLink) {
-                    mainNavLink.classList.add('active');
-                }
+                if (mainNavLink) mainNavLink.classList.add('active');
             });
         });
 
-        // Événements pour les liens légaux du footer
-        document.querySelectorAll('.legal-links .nav-link').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const page = this.getAttribute('data-page');
-                switchPage(page);
-                
-                // Mettre à jour la navigation active
-                navLinks.forEach(l => l.classList.remove('active'));
-                const mainNavLink = document.querySelector(`nav [data-page="${page}"]`);
-                if (mainNavLink) {
-                    mainNavLink.classList.add('active');
-                }
-            });
-        });
-
+        // Filtres et recherche
         searchInput.addEventListener('input', filterFiles);
         filiereFilter.addEventListener('change', filterFiles);
         yearFilter.addEventListener('change', filterFiles);
         semestreFilter.addEventListener('change', filterFiles);
 
-        tableViewBtn.addEventListener('click', function () {
-            switchView('table');
-        });
-
-        cardViewBtn.addEventListener('click', function () {
-            switchView('card');
-        });
+        tableViewBtn.addEventListener('click', () => switchView('table'));
+        cardViewBtn.addEventListener('click', () => switchView('card'));
 
         retryBtn.addEventListener('click', loadFiles);
         booksRetryBtn.addEventListener('click', loadBooks);
 
         themeToggle.addEventListener('click', toggleTheme);
 
-        // Gestion du formulaire de contact
+        // Formulaire de contact
         if (contactForm) {
             contactForm.addEventListener('submit', handleContactForm);
         }
 
-        // Gestion du modal de don
+        // Modal de don
         modalClose.addEventListener('click', closeDonationModal);
         cancelDownload.addEventListener('click', closeDonationModal);
         downloadWithoutDonation.addEventListener('click', proceedWithDownload);
         
         donationOptions.forEach(option => {
             option.addEventListener('click', function() {
-                // Retirer la sélection de toutes les options
                 donationOptions.forEach(opt => opt.classList.remove('selected'));
-                // Ajouter la sélection à l'option cliquée
                 this.classList.add('selected');
                 
                 const amount = this.getAttribute('data-amount');
                 amountValue.textContent = amount;
                 selectedAmount.style.display = 'block';
                 
-                // Mettre à jour le lien WhatsApp
                 whatsappDonation.href = `https://wa.me/22941733286?text=Bonjour%20!%20Je%20souhaite%20faire%20un%20don%20de%20${amount}%20FCFA%20pour%20soutenir%20PrimeAcademia.`;
                 whatsappDonation.style.display = 'block';
             });
         });
 
-        // Fermer le modal en cliquant à l'extérieur
         donationModal.addEventListener('click', function(e) {
-            if (e.target === donationModal) {
-                closeDonationModal();
-            }
+            if (e.target === donationModal) closeDonationModal();
         });
 
-        // Gestion des publicités
+        // Publicités
         adClose.addEventListener('click', closeAd);
         adContainer.addEventListener('click', function(e) {
-            if (e.target === adContainer) {
-                closeAd();
-            }
+            if (e.target === adContainer) closeAd();
         });
         adModal.addEventListener('click', function(e) {
             e.stopPropagation();
         });
     }
 
-    // Fonction pour gérer le téléchargement avec demande de don
+    // Gestion du téléchargement avec demande de don
     function handleFileDownload(downloadLink, fileName) {
-        // Stocker les informations de téléchargement
         currentDownloadLink = downloadLink;
         currentFileName = fileName;
-        
-        // Afficher le modal de don
         showDonationModal();
     }
 
-    // Fonctions pour le modal de don
+    // Modal de don
     function showDonationModal() {
         donationModal.style.display = 'flex';
-        // Réinitialiser la sélection
         donationOptions.forEach(opt => opt.classList.remove('selected'));
         selectedAmount.style.display = 'none';
         whatsappDonation.style.display = 'none';
@@ -2663,14 +2612,12 @@
 
     function closeDonationModal() {
         donationModal.style.display = 'none';
-        // Réinitialiser les variables de téléchargement
         currentDownloadLink = '';
         currentFileName = '';
     }
 
     function proceedWithDownload() {
         if (currentDownloadLink && currentFileName) {
-            // Créer un lien de téléchargement temporaire
             const tempLink = document.createElement('a');
             tempLink.href = currentDownloadLink;
             tempLink.download = currentFileName;
@@ -2682,23 +2629,18 @@
         closeDonationModal();
     }
 
-    // Gestion du formulaire de contact SIMPLIFIÉE
+    // Formulaire de contact
     function handleContactForm(e) {
         e.preventDefault();
         
-        console.log('📤 Envoi du formulaire...');
-        
-        // Afficher le loading
         const submitBtn = e.target.querySelector('button[type="submit"]');
         const originalText = submitBtn.innerHTML;
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi en cours...';
         submitBtn.disabled = true;
         
-        // Cacher les alertes précédentes
         contactAlert.style.display = 'none';
         contactError.style.display = 'none';
         
-        // Soumettre le formulaire normalement (Formspree s'occupe de tout)
         const form = e.target;
         const formData = new FormData(form);
         
@@ -2711,28 +2653,24 @@
         })
         .then(response => {
             if (response.ok) {
-                // Succès
                 contactAlert.style.display = 'block';
                 form.reset();
-                console.log('✅ Message envoyé avec succès!');
             } else {
                 throw new Error('Erreur lors de l\'envoi');
             }
         })
         .catch(error => {
-            console.error('❌ Erreur:', error);
+            console.error('Erreur:', error);
             contactError.style.display = 'block';
         })
         .finally(() => {
-            // Restaurer le bouton
             submitBtn.innerHTML = originalText;
             submitBtn.disabled = false;
         });
     }
 
-    // Gestion du thème SANS localStorage
+    // Gestion du thème
     function initializeTheme() {
-        // Thème clair par défaut, pas de stockage
         document.body.classList.remove('dark-theme');
         themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
     }
@@ -2756,13 +2694,11 @@
         const pageId = PAGES_CONFIG[page];
         if (pageId) {
             document.getElementById(pageId).classList.add('active');
-            
-            // Scroll vers le haut lors du changement de page
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     }
 
-    // Charger les fichiers depuis Google Drive
+    // Chargement des fichiers
     async function loadFiles() {
         try {
             showLoading();
@@ -2781,7 +2717,7 @@
         }
     }
 
-    // Charger les livres depuis Google Drive
+    // Chargement des livres
     async function loadBooks() {
         try {
             showBooksLoading();
@@ -2799,98 +2735,169 @@
         }
     }
 
-    // Charger les publicités depuis Google Drive - FONCTION CORRIGÉE
+    // Chargement des publicités - FONCTION CORRIGÉE
     async function loadAds() {
         try {
-            // Vérifier si le dossier de publicités est configuré
             if (!AD_CONFIG.folderId || AD_CONFIG.folderId === '1YOUR_AD_FOLDER_ID_HERE') {
                 console.log("Dossier publicité non configuré");
                 return;
             }
 
+            console.log("🔄 Chargement des publicités depuis Google Drive...");
+            
             const response = await fetch(
-                `https://www.googleapis.com/drive/v3/files?q='${AD_CONFIG.folderId}' in parents and trashed=false&key=${AD_CONFIG.apiKey}&fields=files(id,name,mimeType,webViewLink,webContentLink)`
+                `https://www.googleapis.com/drive/v3/files?q='${AD_CONFIG.folderId}' in parents and trashed=false&key=${AD_CONFIG.apiKey}&fields=files(id,name,mimeType,webViewLink,webContentLink,imageMediaMetadata)`
             );
 
-            if (!response.ok) throw new Error('Erreur API Drive pour les publicités');
+            if (!response.ok) {
+                throw new Error(`Erreur API Drive: ${response.status}`);
+            }
 
             const data = await response.json();
+            console.log("📁 Données reçues:", data);
 
             if (data.files && data.files.length > 0) {
                 AD_CONFIG.adImages = data.files
-                    .filter(file => file.mimeType.startsWith('image/')) // Filtrer seulement les images
+                    .filter(file => {
+                        const isImage = file.mimeType.startsWith('image/');
+                        console.log(`📄 Fichier: ${file.name}, Type: ${file.mimeType}, Image: ${isImage}`);
+                        return isImage;
+                    })
                     .map(file => ({
                         id: file.id,
                         name: file.name,
                         // URL CORRECTE pour l'affichage des images
-                        imageUrl: `https://drive.google.com/uc?export=view&id=${file.id}`,
-                        directLink: file.webContentLink || `https://drive.google.com/uc?export=download&id=${file.id}`
+                        imageUrl: `https://lh3.googleusercontent.com/d/${file.id}=s1000?authuser=0`,
+                        previewUrl: `https://lh3.googleusercontent.com/d/${file.id}=w500-h500`,
+                        directLink: file.webContentLink,
+                        mimeType: file.mimeType
                     }));
 
-                console.log(`✅ ${AD_CONFIG.adImages.length} publicité(s) chargée(s)`);
+                console.log(`✅ ${AD_CONFIG.adImages.length} publicité(s) chargée(s):`, AD_CONFIG.adImages);
 
-                // Démarrer l'affichage des publicités seulement si on a des images
                 if (AD_CONFIG.adImages.length > 0) {
                     startAdRotation();
+                } else {
+                    console.log("❌ Aucune image trouvée dans le dossier");
                 }
             } else {
-                console.log("Aucune publicité trouvée dans Google Drive.");
+                console.log("📭 Dossier de publicités vide");
             }
 
         } catch (error) {
-            console.error('Erreur lors du chargement des publicités:', error);
+            console.error('❌ Erreur lors du chargement des publicités:', error);
         }
     }
 
-    // Démarrer la rotation des publicités - FONCTION CORRIGÉE
+    // Rotation des publicités - FONCTION CORRIGÉE
     function startAdRotation() {
-        if (AD_CONFIG.adImages.length > 0) {
-            console.log("🔄 Démarrage de la rotation des publicités");
-            
-            // Afficher la première publicité immédiatement
-            showNextAd();
-            
-            // Puis continuer avec l'intervalle
-            setInterval(showNextAd, AD_CONFIG.interval);
+        if (AD_CONFIG.adImages.length === 0) {
+            console.log("❌ Aucune publicité à afficher");
+            return;
         }
+
+        console.log("🔄 Démarrage de la rotation des publicités");
+        
+        // Nettoyer l'intervalle existant
+        if (adInterval) {
+            clearInterval(adInterval);
+        }
+        
+        // Afficher la première publicité après un délai
+        setTimeout(showNextAd, 3000);
+        
+        // Configurer l'intervalle pour les publicités suivantes
+        adInterval = setInterval(showNextAd, AD_CONFIG.interval);
     }
 
-    // Afficher la prochaine publicité - FONCTION CORRIGÉE
+    // Afficher la prochaine publicité - FONCTION COMPLÈTEMENT RECODÉE
     function showNextAd() {
-        if (AD_CONFIG.adImages.length === 0) return;
-        
-        // Sélectionner l'image suivante
+        if (AD_CONFIG.adImages.length === 0) {
+            console.log("❌ Aucune publicité disponible");
+            return;
+        }
+
+        // Vérifier si une publicité est déjà affichée
+        if (AD_CONFIG.isAdActive) {
+            console.log("⏳ Publicité déjà affichée, attente du prochain cycle");
+            return;
+        }
+
         const ad = AD_CONFIG.adImages[AD_CONFIG.currentAdIndex];
-        console.log("🖼️ Affichage de la publicité:", ad.name);
+        console.log(`🖼️ Tentative d'affichage de: ${ad.name}`);
+        console.log(`📎 URL de l'image: ${ad.imageUrl}`);
+
+        // Créer une image pour précharger et tester
+        const testImage = new Image();
         
-        // Créer un nouvel objet Image pour précharger
-        const img = new Image();
-        img.onload = function() {
-            // Une fois l'image chargée, l'afficher dans le modal
+        testImage.onload = function() {
+            console.log(`✅ Image chargée avec succès: ${ad.name}`);
+            
+            // Afficher la publicité
             adImage.src = ad.imageUrl;
             adImage.alt = ad.name;
             adImage.style.display = 'block';
             
-            // Afficher le conteneur de publicité
+            // Afficher le conteneur
             adContainer.style.display = 'flex';
-        };
-        
-        img.onerror = function() {
-            console.error("❌ Erreur de chargement de l'image:", ad.name);
-            // Passer à l'image suivante en cas d'erreur
+            AD_CONFIG.isAdActive = true;
+            
+            // Fermer automatiquement après 8 secondes
+            setTimeout(() => {
+                if (AD_CONFIG.isAdActive) {
+                    closeAd();
+                }
+            }, 8000);
+            
+            // Passer à l'image suivante
             AD_CONFIG.currentAdIndex = (AD_CONFIG.currentAdIndex + 1) % AD_CONFIG.adImages.length;
+            console.log(`➡️ Prochaine publicité: ${AD_CONFIG.currentAdIndex}`);
         };
         
-        // Commencer le chargement
-        img.src = ad.imageUrl;
+        testImage.onerror = function() {
+            console.error(`❌ Erreur de chargement de l'image: ${ad.name}`);
+            console.log(`🔍 URL problématique: ${ad.imageUrl}`);
+            
+            // Essayer avec l'URL alternative
+            const fallbackUrl = `https://drive.google.com/thumbnail?id=${ad.id}&sz=w1000`;
+            console.log(`🔄 Essai avec URL alternative: ${fallbackUrl}`);
+            
+            const fallbackImage = new Image();
+            fallbackImage.onload = function() {
+                console.log(`✅ Image chargée avec URL alternative: ${ad.name}`);
+                adImage.src = fallbackUrl;
+                adImage.alt = ad.name;
+                adImage.style.display = 'block';
+                adContainer.style.display = 'flex';
+                AD_CONFIG.isAdActive = true;
+                
+                setTimeout(() => {
+                    if (AD_CONFIG.isAdActive) {
+                        closeAd();
+                    }
+                }, 8000);
+                
+                AD_CONFIG.currentAdIndex = (AD_CONFIG.currentAdIndex + 1) % AD_CONFIG.adImages.length;
+            };
+            
+            fallbackImage.onerror = function() {
+                console.error(`❌ Échec du chargement avec URL alternative: ${ad.name}`);
+                // Passer à l'image suivante même en cas d'erreur
+                AD_CONFIG.currentAdIndex = (AD_CONFIG.currentAdIndex + 1) % AD_CONFIG.adImages.length;
+            };
+            
+            fallbackImage.src = fallbackUrl;
+        };
         
-        // Passer à la publicité suivante
-        AD_CONFIG.currentAdIndex = (AD_CONFIG.currentAdIndex + 1) % AD_CONFIG.adImages.length;
+        testImage.src = ad.imageUrl;
     }
 
     // Fermer la publicité
     function closeAd() {
+        console.log("🔒 Fermeture de la publicité");
         adContainer.style.display = 'none';
+        AD_CONFIG.isAdActive = false;
+        adImage.src = '';
     }
 
     // API Google Drive pour les fichiers
@@ -2900,7 +2907,6 @@
         for (const [filiere, years] of Object.entries(DRIVE_CONFIG.folders)) {
             for (const [year, semestres] of Object.entries(years)) {
                 for (const [semestre, folderId] of Object.entries(semestres)) {
-                    // Vérifier si le dossier existe réellement (éviter les dossiers vides)
                     if (folderId && folderId !== 'COLLEZ_ID_GESTION_ANNEE1_SEM1_ICI' && 
                         !folderId.includes('COLLEZ_ID')) {
                         try {
@@ -2948,7 +2954,6 @@
         booksData = [];
 
         try {
-            // Récupération des livres depuis Google Drive
             const response = await fetch(
                 `https://www.googleapis.com/drive/v3/files?q='${LIBRAIRIE_CONFIG.folderId}' in parents and trashed=false&key=${LIBRAIRIE_CONFIG.apiKey}&fields=files(id,name,mimeType,webViewLink,createdTime,modifiedTime,thumbnailLink)`
             );
@@ -2958,10 +2963,7 @@
             const data = await response.json();
 
             data.files.forEach(file => {
-                // Extraction des métadonnées du livre depuis le nom du fichier
                 const parts = file.name.split(' - ');
-                
-                // CORRECTION ICI : Utiliser l'URL d'affichage directe
                 const imageUrl = `https://drive.google.com/thumbnail?id=${file.id}&sz=w400`;
                 
                 booksData.push({
@@ -2997,7 +2999,7 @@
 
             bookCard.innerHTML = `
                 <div class="book-image">
-                    <img src="${book.imageUrl}" alt="${book.title}" loading="lazy">
+                    <img src="${book.imageUrl}" alt="${book.title}" loading="lazy" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkNvdmVydHVyZSBub24gZGlzcG9uaWJsZTwvdGV4dD48L3N2Zz4='">
                 </div>
                 <div class="book-content">
                     <h3>${book.title}</h3>
@@ -3019,35 +3021,7 @@
         });
     }
 
-    function showBooksLoading() {
-        booksLoading.style.display = 'block';
-        booksError.style.display = 'none';
-        booksEmptyState.style.display = 'none';
-        booksGrid.style.display = 'none';
-    }
-
-    function showBooksError() {
-        booksLoading.style.display = 'none';
-        booksError.style.display = 'block';
-        booksEmptyState.style.display = 'none';
-        booksGrid.style.display = 'none';
-    }
-
-    function showBooksEmptyState() {
-        booksLoading.style.display = 'none';
-        booksError.style.display = 'none';
-        booksEmptyState.style.display = 'block';
-        booksGrid.style.display = 'none';
-    }
-
-    function showBooksContent() {
-        booksLoading.style.display = 'none';
-        booksError.style.display = 'none';
-        booksEmptyState.style.display = 'none';
-        booksGrid.style.display = 'grid';
-    }
-
-    // Utilitaires
+    // Utilitaires pour les fichiers
     function getFileType(mimeType) {
         const typeMap = {
             'application/pdf': 'PDF',
@@ -3062,8 +3036,6 @@
     function isFileNew(createdTime) {
         const createdDate = new Date(createdTime);
         const now = new Date();
-        
-        // Vérifier si c'est le même jour (aujourd'hui)
         return createdDate.getDate() === now.getDate() &&
                createdDate.getMonth() === now.getMonth() &&
                createdDate.getFullYear() === now.getFullYear();
@@ -3078,6 +3050,7 @@
         }
     }
 
+    // Filtrage et affichage des fichiers
     function filterFiles() {
         const searchTerm = searchInput.value.toLowerCase();
         const selectedFiliere = filiereFilter.value;
@@ -3247,7 +3220,6 @@
 
     function updateStats() {
         totalFilesElement.textContent = filesData.length;
-
         const uniqueFilieres = new Set(filesData.map(file => file.filiere));
         totalFilieresElement.textContent = uniqueFilieres.size;
     }
@@ -3256,7 +3228,6 @@
         refreshInterval = setInterval(() => {
             updateCounter--;
             
-            // Convertir les secondes en heures et minutes
             const hours = Math.floor(updateCounter / 3600);
             const minutes = Math.floor((updateCounter % 3600) / 60);
             
@@ -3268,11 +3239,12 @@
 
             if (updateCounter <= 0) {
                 loadFiles();
-                updateCounter = 24 * 60 * 60; // Réinitialiser à 24 heures
+                updateCounter = 24 * 60 * 60;
             }
         }, 1000);
     }
 
+    // États d'affichage
     function showLoading() {
         loadingElement.style.display = 'block';
         errorElement.style.display = 'none';
@@ -3282,7 +3254,7 @@
 
     function showError() {
         loadingElement.style.display = 'none';
-        errorElement.style.display = 'none';
+        errorElement.style.display = 'block';
         emptyStateElement.style.display = 'none';
         filesContentElement.style.display = 'none';
     }
@@ -3300,7 +3272,36 @@
         emptyStateElement.style.display = 'none';
         filesContentElement.style.display = 'block';
     }
-    </script>
+
+    function showBooksLoading() {
+        booksLoading.style.display = 'block';
+        booksError.style.display = 'none';
+        booksEmptyState.style.display = 'none';
+        booksGrid.style.display = 'none';
+    }
+
+    function showBooksError() {
+        booksLoading.style.display = 'none';
+        booksError.style.display = 'block';
+        booksEmptyState.style.display = 'none';
+        booksGrid.style.display = 'none';
+    }
+
+    function showBooksEmptyState() {
+        booksLoading.style.display = 'none';
+        booksError.style.display = 'none';
+        booksEmptyState.style.display = 'block';
+        booksGrid.style.display = 'none';
+    }
+
+    function showBooksContent() {
+        booksLoading.style.display = 'none';
+        booksError.style.display = 'none';
+        booksEmptyState.style.display = 'none';
+        booksGrid.style.display = 'grid';
+    }
+</script>
 </body>
 </html>
 
+   
