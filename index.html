@@ -31,19 +31,6 @@
             --radius-sm: 8px;
         }
 
-        .dark-theme {
-            --primary: #5D8CD4;
-            --secondary: #8BC34A;
-            --accent: #FFD700;
-            --accent2: #CD853F;
-            --accent3: #7A9EBB;
-            --accent4: #9C6FE4;
-            --light: #1A2A3A;
-            --light2: #2C3E50;
-            --dark: #ECF0F1;
-            --dark2: #BDC3C7;
-        }
-
         /* ===== RESET & BASE STYLES ===== */
         * {
             margin: 0;
@@ -214,34 +201,6 @@
             color: white;
             transform: translateY(-3px);
             box-shadow: 0 5px 15px rgba(74, 111, 165, 0.3);
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-            z-index: 1001;
-        }
-
-        .theme-toggle {
-            background: var(--primary);
-            border: none;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            font-size: 1.2rem;
-            cursor: pointer;
-            color: white;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .theme-toggle:hover {
-            background: var(--accent2);
-            transform: rotate(15deg) scale(1.1);
-            box-shadow: 0 5px 15px rgba(139, 69, 19, 0.3);
         }
 
         /* ===== MAIN CONTENT ===== */
@@ -476,36 +435,6 @@
             outline: none;
         }
 
-        .view-toggle {
-            display: flex;
-            gap: 8px;
-            background: white;
-            padding: 8px;
-            border-radius: var(--radius);
-            border: 2px solid var(--light2);
-        }
-
-        .view-toggle button {
-            padding: 10px 20px;
-            border: none;
-            background: none;
-            cursor: pointer;
-            border-radius: var(--radius-sm);
-            transition: var(--transition);
-            color: var(--dark);
-            font-weight: 600;
-        }
-
-        .view-toggle button.active {
-            background: var(--primary);
-            color: white;
-            box-shadow: 0 4px 15px rgba(74, 111, 165, 0.3);
-        }
-
-        .view-toggle button:hover:not(.active) {
-            background: rgba(74, 111, 165, 0.1);
-        }
-
         /* ===== STATS ===== */
         .stats {
             display: grid;
@@ -567,6 +496,7 @@
             box-shadow: var(--shadow);
             border: 1px solid rgba(74, 111, 165, 0.1);
             width: 100%;
+            overflow-x: auto;
         }
 
         .loading, .error, .empty-state {
@@ -613,8 +543,7 @@
             border-radius: var(--radius);
             overflow: hidden;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            display: block;
-            overflow-x: auto;
+            min-width: 600px;
         }
 
         .table-view th {
@@ -687,129 +616,6 @@
             color: white;
             box-shadow: 0 3px 10px rgba(39, 174, 96, 0.3);
             animation: pulse 2s infinite;
-        }
-
-        /* ===== CARD VIEW ===== */
-        .card-view {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1rem;
-            width: 100%;
-        }
-
-        .file-card {
-            background: white;
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            border: 1px solid rgba(74, 111, 165, 0.1);
-            position: relative;
-        }
-
-        .file-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: var(--shadow-hover);
-            border-color: var(--primary);
-        }
-
-        .file-card-header {
-            background: linear-gradient(135deg, var(--primary), var(--accent3));
-            color: white;
-            padding: 1.2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: relative;
-        }
-
-        .file-card-header i {
-            font-size: 1.5rem;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
-        }
-
-        .file-card-body {
-            padding: 1.5rem;
-        }
-
-        .file-card-body h3 {
-            margin-bottom: 1rem;
-            color: var(--dark);
-            font-size: 1.1rem;
-            line-height: 1.4;
-        }
-
-        .file-meta {
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-        }
-
-        .file-meta span {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--dark2);
-            font-size: 0.9rem;
-        }
-
-        .file-meta i {
-            color: var(--accent);
-            width: 16px;
-        }
-
-        .file-card-footer {
-            padding: 1.2rem;
-            background: var(--light);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top: 1px solid rgba(74, 111, 165, 0.1);
-        }
-
-        /* ===== BUTTONS ===== */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 24px;
-            border: none;
-            border-radius: var(--radius);
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            transition: var(--transition);
-            background: var(--primary);
-            color: white;
-            box-shadow: 0 4px 15px rgba(74, 111, 165, 0.3);
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(74, 111, 165, 0.4);
-            background: linear-gradient(135deg, var(--primary), var(--accent3));
-        }
-
-        .btn-whatsapp {
-            background: linear-gradient(135deg, #25D366, #128C7E);
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
-        }
-
-        .btn-whatsapp:hover {
-            background: linear-gradient(135deg, #128C7E, #25D366);
-            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
-        }
-
-        .btn-secondary {
-            background: var(--secondary);
-            box-shadow: 0 4px 15px rgba(107, 142, 35, 0.3);
-        }
-
-        .btn-secondary:hover {
-            background: linear-gradient(135deg, var(--secondary), #8BC34A);
-            box-shadow: 0 8px 25px rgba(107, 142, 35, 0.4);
         }
 
         /* ===== ARTICLES ===== */
@@ -1317,12 +1123,58 @@
             border: 1px solid #f5c6cb;
         }
 
+        /* ===== BUTTONS ===== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: var(--transition);
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(74, 111, 165, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(74, 111, 165, 0.4);
+            background: linear-gradient(135deg, var(--primary), var(--accent3));
+        }
+
+        .btn-whatsapp {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+        }
+
+        .btn-whatsapp:hover {
+            background: linear-gradient(135deg, #128C7E, #25D366);
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            box-shadow: 0 4px 15px rgba(107, 142, 35, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, var(--secondary), #8BC34A);
+            box-shadow: 0 8px 25px rgba(107, 142, 35, 0.4);
+        }
+
         /* ===== FOOTER ===== */
         footer {
             background: linear-gradient(135deg, var(--dark), #1A2530);
             color: white;
             padding: 3rem 0 1.5rem;
             margin-top: 3rem;
+            width: 100%;
+            overflow: hidden;
         }
 
         .footer-links {
@@ -1330,6 +1182,11 @@
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 2rem;
             margin-bottom: 2rem;
+        }
+
+        .footer-section {
+            min-width: 0;
+            overflow: hidden;
         }
 
         .footer-section h3 {
@@ -1350,7 +1207,7 @@
             background: var(--accent);
         }
 
-        .footer-section a {
+        .footer-section a, .footer-section p {
             display: block;
             color: rgba(255, 255, 255, 0.85);
             text-decoration: none;
@@ -1358,6 +1215,8 @@
             transition: var(--transition);
             padding: 6px 0;
             font-size: 0.95rem;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         .footer-section a:hover {
@@ -1395,6 +1254,7 @@
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             color: rgba(255, 255, 255, 0.7);
             font-size: 0.9rem;
+            width: 100%;
         }
 
         /* ===== RESPONSIVE DESIGN ===== */
@@ -1403,8 +1263,8 @@
                 font-size: 1.8rem;
             }
             
-            .card-view {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            .footer-links {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
@@ -1485,25 +1345,16 @@
                 min-width: 100%;
             }
             
-            .view-toggle {
-                align-self: center;
-                margin-top: 0.5rem;
-            }
-            
             .stats {
                 grid-template-columns: 1fr;
             }
             
-            .card-view {
-                grid-template-columns: 1fr;
+            .table-view {
+                font-size: 0.8rem;
             }
             
-            .articles-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .books-grid {
-                grid-template-columns: 1fr;
+            .table-view th, .table-view td {
+                padding: 0.8rem;
             }
             
             .article-detail {
@@ -1538,6 +1389,10 @@
             
             .copyright {
                 font-size: 0.85rem;
+            }
+            
+            .files-container {
+                padding: 1rem;
             }
         }
 
@@ -1584,19 +1439,13 @@
             
             .table-view th,
             .table-view td {
-                padding: 0.8rem;
-                font-size: 0.85rem;
+                padding: 0.8rem 0.5rem;
+                font-size: 0.75rem;
             }
             
             .file-link {
-                font-size: 0.85rem;
-                padding: 5px 8px;
-            }
-            
-            .file-card-header,
-            .file-card-body,
-            .file-card-footer {
-                padding: 1rem;
+                font-size: 0.75rem;
+                padding: 4px 6px;
             }
             
             .article-card {
@@ -1658,6 +1507,14 @@
             footer {
                 padding: 2rem 0 1rem;
             }
+            
+            .footer-section h3 {
+                font-size: 1.1rem;
+            }
+            
+            .footer-section a, .footer-section p {
+                font-size: 0.9rem;
+            }
         }
 
         @media (max-width: 360px) {
@@ -1673,8 +1530,13 @@
                 font-size: 1rem;
             }
             
-            .file-card-body h3 {
-                font-size: 1rem;
+            .table-view th, .table-view td {
+                padding: 0.6rem 0.4rem;
+                font-size: 0.7rem;
+            }
+            
+            .file-link {
+                font-size: 0.7rem;
             }
             
             .article-content h3 {
@@ -1684,6 +1546,10 @@
             .btn {
                 padding: 8px 16px;
                 font-size: 0.85rem;
+            }
+            
+            .footer-links {
+                gap: 1rem;
             }
         }
 
@@ -1753,12 +1619,6 @@
                         <li><a href="#" class="nav-link" data-page="contact">Contact</a></li>
                     </ul>
                 </nav>
-                
-                <div class="header-actions">
-                    <button class="theme-toggle" id="theme-toggle" title="Basculer le thème">
-                        <i class="fas fa-moon"></i>
-                    </button>
-                </div>
             </div>
         </div>
     </header>
@@ -1864,10 +1724,6 @@
                         <option value="semestre1">Semestre 1</option>
                         <option value="semestre2">Semestre 2</option>
                     </select>
-                    <div class="view-toggle">
-                        <button id="table-view-btn" class="active"><i class="fas fa-list"></i></button>
-                        <button id="card-view-btn"><i class="fas fa-th-large"></i></button>
-                    </div>
                 </div>
             </div>
 
@@ -1927,10 +1783,6 @@
                             <!-- Les fichiers seront ajoutés ici dynamiquement -->
                         </tbody>
                     </table>
-
-                    <div class="card-view" id="card-view" style="display: none;">
-                        <!-- Les cartes de fichiers seront ajoutées ici dynamiquement -->
-                    </div>
                 </div>
             </div>
         </div>
@@ -2975,8 +2827,6 @@
 
         let filesData = [];
         let booksData = [];
-        let currentView = 'table';
-        let refreshInterval;
         let updateCounter = 24 * 60 * 60;
 
         // =============================================
@@ -2989,7 +2839,6 @@
         const emptyStateElement = document.getElementById('empty-state');
         const filesContentElement = document.getElementById('files-content');
         const filesTableBody = document.getElementById('files-table-body');
-        const cardViewElement = document.getElementById('card-view');
         const totalFilesElement = document.getElementById('total-files');
         const totalFilieresElement = document.getElementById('total-filieres');
         const updateTimeElement = document.getElementById('update-time');
@@ -2999,14 +2848,11 @@
         const filiereFilter = document.getElementById('filiere-filter');
         const yearFilter = document.getElementById('year-filter');
         const semestreFilter = document.getElementById('semestre-filter');
-        const tableViewBtn = document.getElementById('table-view-btn');
-        const cardViewBtn = document.getElementById('card-view-btn');
         const retryBtn = document.getElementById('retry-btn');
 
         // Navigation
         const navLinks = document.querySelectorAll('.nav-link');
         const pageSections = document.querySelectorAll('.page-section');
-        const themeToggle = document.getElementById('theme-toggle');
         const menuToggle = document.getElementById('menuToggle');
         const mainNav = document.getElementById('mainNav');
         const menuOverlay = document.getElementById('menuOverlay');
@@ -3046,7 +2892,6 @@
             
             // Configuration de l'interface
             setupEventListeners();
-            initializeTheme();
             
             // Chargement des données
             loadFiles();
@@ -3068,7 +2913,6 @@
             setupIntroduction();
             setupArticles();
             setupContactForm();
-            setupTheme();
         }
 
         function setupNavigation() {
@@ -3119,10 +2963,6 @@
             filiereFilter.addEventListener('change', filterFiles);
             yearFilter.addEventListener('change', filterFiles);
             semestreFilter.addEventListener('change', filterFiles);
-
-            // Vue tableau/cartes
-            tableViewBtn.addEventListener('click', () => switchView('table'));
-            cardViewBtn.addEventListener('click', () => switchView('card'));
 
             // Boutons de rechargement
             retryBtn.addEventListener('click', loadFiles);
@@ -3181,12 +3021,6 @@
         function setupContactForm() {
             if (contactForm) {
                 contactForm.addEventListener('submit', handleContactForm);
-            }
-        }
-
-        function setupTheme() {
-            if (themeToggle) {
-                themeToggle.addEventListener('click', toggleTheme);
             }
         }
 
@@ -3259,34 +3093,6 @@
             menuOverlay.classList.remove('active');
             menuToggle.classList.remove('active');
             document.body.style.overflow = '';
-        }
-
-        // THÈME
-        function initializeTheme() {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') {
-                document.body.classList.add('dark-theme');
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-                themeToggle.style.background = 'linear-gradient(135deg, #D4A017, #8A2BE2)';
-            } else {
-                document.body.classList.remove('dark-theme');
-                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-                themeToggle.style.background = 'var(--primary)';
-            }
-        }
-
-        function toggleTheme() {
-            if (document.body.classList.contains('dark-theme')) {
-                document.body.classList.remove('dark-theme');
-                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-                themeToggle.style.background = 'var(--primary)';
-                localStorage.setItem('theme', 'light');
-            } else {
-                document.body.classList.add('dark-theme');
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-                themeToggle.style.background = 'linear-gradient(135deg, #D4A017, #8A2BE2)';
-                localStorage.setItem('theme', 'dark');
-            }
         }
 
         // =============================================
@@ -3380,11 +3186,7 @@
         }
 
         function displayFiles(files) {
-            if (currentView === 'table') {
-                displayFilesAsTable(files);
-            } else {
-                displayFilesAsCards(files);
-            }
+            displayFilesAsTable(files);
         }
 
         function displayFilesAsTable(files) {
@@ -3429,74 +3231,6 @@
                 `;
                 filesTableBody.appendChild(row);
             });
-        }
-
-        function displayFilesAsCards(files) {
-            cardViewElement.innerHTML = '';
-
-            if (files.length === 0) {
-                cardViewElement.innerHTML = `
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
-                        <i class="fas fa-search" style="font-size: 2rem; margin-bottom: 1rem; color: var(--accent3);"></i>
-                        <p style="color: var(--dark2); font-size: 1rem;">Aucun fichier trouvé avec ces critères.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            files.forEach(file => {
-                const createdDate = new Date(file.createdTime);
-                const formattedDate = createdDate.toLocaleDateString('fr-FR', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric'
-                });
-
-                const card = document.createElement('div');
-                card.className = 'file-card';
-                if (file.isNew) card.classList.add('new-file');
-
-                card.innerHTML = `
-                    <div class="file-card-header">
-                        <i class="${file.iconLink}"></i>
-                        <span>${file.type}</span>
-                        ${file.isNew ? '<span class="file-badge new">Nouveau</span>' : ''}
-                    </div>
-                    <div class="file-card-body">
-                        <h3>${file.name}</h3>
-                        <div class="file-meta">
-                            <span><i class="fas fa-graduation-cap"></i> ${formatFiliere(file.filiere)}</span>
-                            <span><i class="fas fa-calendar"></i> ${formatYear(file.year)}</span>
-                            <span><i class="fas fa-book"></i> ${formatSemestre(file.semestre)}</span>
-                        </div>
-                    </div>
-                    <div class="file-card-footer">
-                        <span>${formattedDate}</span>
-                        <a href="#" class="file-link" onclick="handleFileDownload('${file.id}', '${file.name}')">
-                            <i class="fas fa-download"></i> Télécharger
-                        </a>
-                    </div>
-                `;
-                cardViewElement.appendChild(card);
-            });
-        }
-
-        function switchView(view) {
-            currentView = view;
-
-            if (view === 'table') {
-                document.getElementById('table-view').style.display = 'table';
-                cardViewElement.style.display = 'none';
-                tableViewBtn.classList.add('active');
-                cardViewBtn.classList.remove('active');
-            } else {
-                document.getElementById('table-view').style.display = 'none';
-                cardViewElement.style.display = 'grid';
-                tableViewBtn.classList.remove('active');
-                cardViewBtn.classList.add('active');
-            }
-
-            filterFiles();
         }
 
         function updateFileDisplay() {
