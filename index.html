@@ -3481,17 +3481,17 @@
 
     <script>
         // =============================================
-        // CONFIGURATION SUPRABASE
+        // CONFIGURATION SUPRABASE - CORRIGÉE
         // =============================================
 
         // REMPLACEZ CES VALEURS PAR VOS CLÉS SUPRABASE
         const SUPABASE_CONFIG = {
             url: 'https://upbrkpsxytizjucmoeyu.supabase.co', // Remplacez par votre URL Supabase
-            anonKey: ''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVwYnJrcHN4eXRpemp1Y21vZXl1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwNDI4MDYsImV4cCI6MjA4MDYxODgwNn0.M7b41qI5wleQH6GfZg28-QO4r7tkqtwixavmtVvbYZg'' // Remplacez par votre clé anon
+            anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVwYnJrcHN4eXRpemp1Y21vZXl1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwNDI4MDYsImV4cCI6MjA4MDYxODgwNn0.M7b41qI5wleQH6GfZg28-QO4r7tkqtwixavmtVvbYZg' // CORRIGÉ : apostrophes supprimées
         };
 
         // Initialisation Supabase
-        const supabase = supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+        const supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
 
         // =============================================
         // CONFIGURATION GOOGLE DRIVE
@@ -3606,150 +3606,204 @@
         };
 
         // =============================================
-        // ÉLÉMENTS DOM
+        // ÉLÉMENTS DOM - DÉCLARATION
         // =============================================
 
-        // Modal d'authentification
-        const authModal = document.getElementById('authModal');
-        const closeAuthModal = document.getElementById('closeAuthModal');
-        
-        // Boutons d'authentification dans le header
-        const loginButtonHeader = document.getElementById('login-button-header');
-        const registerButtonHeader = document.getElementById('register-button-header');
-        
-        // Boutons d'authentification dans le main
-        const loginButtonMain = document.getElementById('login-button-main');
-        const registerButtonMain = document.getElementById('register-button-main');
-        
-        // Formulaires d'authentification
-        const loginForm = document.getElementById('login-form');
-        const registerStep1 = document.getElementById('register-step-1');
-        const registerStep2 = document.getElementById('register-step-2');
-        const registerStep3 = document.getElementById('register-step-3');
-        const registerStep4 = document.getElementById('register-step-4');
-        const forgotPasswordForm = document.getElementById('forgot-password-form');
-        
-        // Boutons de navigation entre formulaires
-        const switchToLogin = document.getElementById('switch-to-login');
-        const switchToRegister = document.getElementById('switch-to-register');
-        const backToLogin = document.getElementById('back-to-login');
-        const forgotPassword = document.getElementById('forgot-password');
-        
-        // Boutons de navigation entre étapes
-        const nextStep1 = document.getElementById('next-step-1');
-        const prevStep2 = document.getElementById('prev-step-2');
-        const nextStep2 = document.getElementById('next-step-2');
-        const prevStep3 = document.getElementById('prev-step-3');
-        const nextStep3 = document.getElementById('next-step-3');
-        const prevStep4 = document.getElementById('prev-step-4');
-        const completeRegistration = document.getElementById('complete-registration');
-        
-        // Boutons de soumission
-        const loginButton = document.getElementById('login-button');
-        const resetPasswordButton = document.getElementById('reset-password-button');
-        
-        // Champs de formulaire d'inscription
-        const registerNom = document.getElementById('register-nom');
-        const registerPrenom = document.getElementById('register-prenom');
-        const registerEmail = document.getElementById('register-email');
-        const registerPhone = document.getElementById('register-phone');
-        const registerBirthdate = document.getElementById('register-birthdate');
-        const registerGender = document.getElementById('register-gender');
-        const registerFiliere = document.getElementById('register-filiere');
-        const registerNiveau = document.getElementById('register-niveau');
-        const registerEtablissement = document.getElementById('register-etablissement');
-        const registerVille = document.getElementById('register-ville');
-        const registerObjectif = document.getElementById('register-objectif');
-        const registerMatieres = document.getElementById('register-matieres');
-        const registerPassword = document.getElementById('register-password');
-        const registerConfirmPassword = document.getElementById('register-confirm-password');
-        const registerNewsletter = document.getElementById('register-newsletter');
-        const registerTerms = document.getElementById('register-terms');
-        const registerInviteCode = document.getElementById('register-invite-code');
-        const registerConfirm = document.getElementById('register-confirm');
-        
-        // Champs de formulaire de connexion
-        const loginEmail = document.getElementById('login-email');
-        const loginPassword = document.getElementById('login-password');
-        const rememberMe = document.getElementById('remember-me');
-        
-        // Champs de formulaire de réinitialisation
-        const resetEmail = document.getElementById('reset-email');
-        
-        // Profil utilisateur
-        const userProfile = document.getElementById('user-profile');
-        const userAvatar = document.getElementById('user-avatar');
-        const userName = document.getElementById('user-name');
-        const userMenu = document.getElementById('user-menu');
-        const authButtons = document.getElementById('auth-buttons');
-        
-        // Boutons du menu utilisateur
-        const viewProfile = document.getElementById('view-profile');
-        const myDownloads = document.getElementById('my-downloads');
-        const logoutButton = document.getElementById('logout-button');
-        
-        // Message de bienvenue
-        const welcomeMessage = document.getElementById('welcome-message');
-        const loginRequired = document.getElementById('login-required');
-        
-        // Éléments des fichiers
-        const loading = document.getElementById('loading');
-        const error = document.getElementById('error');
-        const emptyState = document.getElementById('empty-state');
-        const filesContent = document.getElementById('files-content');
-        const filesGrid = document.getElementById('files-grid');
-        const totalFilesElement = document.getElementById('total-files');
-        const totalFilieresElement = document.getElementById('total-filieres');
-        const totalUsersElement = document.getElementById('total-users');
-        const totalUsersFooter = document.getElementById('total-users-footer');
-        
-        // Filtres et recherche
-        const searchInput = document.getElementById('search-input');
-        const filiereFilter = document.getElementById('filiere-filter');
-        const yearFilter = document.getElementById('year-filter');
-        const semestreFilter = document.getElementById('semestre-filter');
-        const retryBtn = document.getElementById('retry-btn');
-        
-        // Navigation
-        const navLinks = document.querySelectorAll('.nav-link');
-        const pageSections = document.querySelectorAll('.page-section');
-        const menuToggle = document.getElementById('menuToggle');
-        const mainNav = document.getElementById('mainNav');
-        const menuOverlay = document.getElementById('menuOverlay');
-        const logo = document.querySelector('.logo');
-        
-        // Librairie
-        const booksGrid = document.getElementById('books-grid');
-        const booksEmptyState = document.getElementById('books-empty-state');
-        const booksLoading = document.getElementById('books-loading');
-        const booksError = document.getElementById('books-error');
-        const booksRetryBtn = document.getElementById('books-retry-btn');
-        
-        // Introduction
-        const introCollapsed = document.getElementById('intro-collapsed');
-        const introExpanded = document.getElementById('intro-expanded');
-        const introToggle = document.getElementById('intro-toggle');
-        const introClose = document.getElementById('intro-close');
-        
-        // Pagination
-        const paginationElement = document.getElementById('pagination');
-        const firstPageBtn = document.getElementById('first-page');
-        const prevPageBtn = document.getElementById('prev-page');
-        const nextPageBtn = document.getElementById('next-page');
-        const lastPageBtn = document.getElementById('last-page');
-        const pageInfo = document.getElementById('page-info');
-        
-        // Contact
-        const contactForm = document.getElementById('contactForm');
-        const contactAlert = document.getElementById('contact-alert');
-        const contactError = document.getElementById('contact-error');
+        let authModal, closeAuthModal, loginButtonHeader, registerButtonHeader;
+        let loginButtonMain, registerButtonMain;
+        let loginForm, registerStep1, registerStep2, registerStep3, registerStep4, forgotPasswordForm;
+        let switchToLogin, switchToRegister, backToLogin, forgotPassword;
+        let nextStep1, prevStep2, nextStep2, prevStep3, nextStep3, prevStep4, completeRegistration;
+        let loginButton, resetPasswordButton;
+        let registerNom, registerPrenom, registerEmail, registerPhone, registerBirthdate, registerGender;
+        let registerFiliere, registerNiveau, registerEtablissement, registerVille, registerObjectif, registerMatieres;
+        let registerPassword, registerConfirmPassword, registerNewsletter, registerTerms, registerInviteCode, registerConfirm;
+        let loginEmail, loginPassword, rememberMe;
+        let resetEmail;
+        let userProfile, userAvatar, userName, userMenu, authButtons;
+        let viewProfile, myDownloads, logoutButton;
+        let welcomeMessage, loginRequired;
+        let loading, error, emptyState, filesContent, filesGrid;
+        let totalFilesElement, totalFilieresElement, totalUsersElement, totalUsersFooter;
+        let searchInput, filiereFilter, yearFilter, semestreFilter, retryBtn;
+        let navLinks, pageSections, menuToggle, mainNav, menuOverlay, logo;
+        let booksGrid, booksEmptyState, booksLoading, booksError, booksRetryBtn;
+        let introCollapsed, introExpanded, introToggle, introClose;
+        let paginationElement, firstPageBtn, prevPageBtn, nextPageBtn, lastPageBtn, pageInfo;
+        let contactForm, contactAlert, contactError;
 
         // =============================================
-        // INITIALISATION
+        // INITIALISATION DES ÉLÉMENTS DOM
+        // =============================================
+
+        function initializeDOMElements() {
+            console.log("🔍 Initialisation des éléments DOM...");
+            
+            // Modal d'authentification
+            authModal = document.getElementById('authModal');
+            closeAuthModal = document.getElementById('closeAuthModal');
+            
+            // Boutons d'authentification dans le header
+            loginButtonHeader = document.getElementById('login-button-header');
+            registerButtonHeader = document.getElementById('register-button-header');
+            
+            // Boutons d'authentification dans le main
+            loginButtonMain = document.getElementById('login-button-main');
+            registerButtonMain = document.getElementById('register-button-main');
+            
+            // Formulaires d'authentification
+            loginForm = document.getElementById('login-form');
+            registerStep1 = document.getElementById('register-step-1');
+            registerStep2 = document.getElementById('register-step-2');
+            registerStep3 = document.getElementById('register-step-3');
+            registerStep4 = document.getElementById('register-step-4');
+            forgotPasswordForm = document.getElementById('forgot-password-form');
+            
+            // Boutons de navigation entre formulaires
+            switchToLogin = document.getElementById('switch-to-login');
+            switchToRegister = document.getElementById('switch-to-register');
+            backToLogin = document.getElementById('back-to-login');
+            forgotPassword = document.getElementById('forgot-password');
+            
+            // Boutons de navigation entre étapes
+            nextStep1 = document.getElementById('next-step-1');
+            prevStep2 = document.getElementById('prev-step-2');
+            nextStep2 = document.getElementById('next-step-2');
+            prevStep3 = document.getElementById('prev-step-3');
+            nextStep3 = document.getElementById('next-step-3');
+            prevStep4 = document.getElementById('prev-step-4');
+            completeRegistration = document.getElementById('complete-registration');
+            
+            // Boutons de soumission
+            loginButton = document.getElementById('login-button');
+            resetPasswordButton = document.getElementById('reset-password-button');
+            
+            // Champs de formulaire d'inscription
+            registerNom = document.getElementById('register-nom');
+            registerPrenom = document.getElementById('register-prenom');
+            registerEmail = document.getElementById('register-email');
+            registerPhone = document.getElementById('register-phone');
+            registerBirthdate = document.getElementById('register-birthdate');
+            registerGender = document.getElementById('register-gender');
+            registerFiliere = document.getElementById('register-filiere');
+            registerNiveau = document.getElementById('register-niveau');
+            registerEtablissement = document.getElementById('register-etablissement');
+            registerVille = document.getElementById('register-ville');
+            registerObjectif = document.getElementById('register-objectif');
+            registerMatieres = document.getElementById('register-matieres');
+            registerPassword = document.getElementById('register-password');
+            registerConfirmPassword = document.getElementById('register-confirm-password');
+            registerNewsletter = document.getElementById('register-newsletter');
+            registerTerms = document.getElementById('register-terms');
+            registerInviteCode = document.getElementById('register-invite-code');
+            registerConfirm = document.getElementById('register-confirm');
+            
+            // Champs de formulaire de connexion
+            loginEmail = document.getElementById('login-email');
+            loginPassword = document.getElementById('login-password');
+            rememberMe = document.getElementById('remember-me');
+            
+            // Champs de formulaire de réinitialisation
+            resetEmail = document.getElementById('reset-email');
+            
+            // Profil utilisateur
+            userProfile = document.getElementById('user-profile');
+            userAvatar = document.getElementById('user-avatar');
+            userName = document.getElementById('user-name');
+            userMenu = document.getElementById('userMenu');
+            authButtons = document.getElementById('auth-buttons');
+            
+            // Boutons du menu utilisateur
+            viewProfile = document.getElementById('view-profile');
+            myDownloads = document.getElementById('my-downloads');
+            logoutButton = document.getElementById('logout-button');
+            
+            // Message de bienvenue
+            welcomeMessage = document.getElementById('welcome-message');
+            loginRequired = document.getElementById('login-required');
+            
+            // Éléments des fichiers
+            loading = document.getElementById('loading');
+            error = document.getElementById('error');
+            emptyState = document.getElementById('empty-state');
+            filesContent = document.getElementById('files-content');
+            filesGrid = document.getElementById('files-grid');
+            totalFilesElement = document.getElementById('total-files');
+            totalFilieresElement = document.getElementById('total-filieres');
+            totalUsersElement = document.getElementById('total-users');
+            totalUsersFooter = document.getElementById('total-users-footer');
+            
+            // Filtres et recherche
+            searchInput = document.getElementById('search-input');
+            filiereFilter = document.getElementById('filiere-filter');
+            yearFilter = document.getElementById('year-filter');
+            semestreFilter = document.getElementById('semestre-filter');
+            retryBtn = document.getElementById('retry-btn');
+            
+            // Navigation
+            navLinks = document.querySelectorAll('.nav-link');
+            pageSections = document.querySelectorAll('.page-section');
+            menuToggle = document.getElementById('menuToggle');
+            mainNav = document.getElementById('mainNav');
+            menuOverlay = document.getElementById('menuOverlay');
+            logo = document.querySelector('.logo');
+            
+            // Librairie
+            booksGrid = document.getElementById('books-grid');
+            booksEmptyState = document.getElementById('books-empty-state');
+            booksLoading = document.getElementById('books-loading');
+            booksError = document.getElementById('books-error');
+            booksRetryBtn = document.getElementById('books-retry-btn');
+            
+            // Introduction
+            introCollapsed = document.getElementById('intro-collapsed');
+            introExpanded = document.getElementById('intro-expanded');
+            introToggle = document.getElementById('intro-toggle');
+            introClose = document.getElementById('intro-close');
+            
+            // Pagination
+            paginationElement = document.getElementById('pagination');
+            firstPageBtn = document.getElementById('first-page');
+            prevPageBtn = document.getElementById('prev-page');
+            nextPageBtn = document.getElementById('next-page');
+            lastPageBtn = document.getElementById('last-page');
+            pageInfo = document.getElementById('page-info');
+            
+            // Contact
+            contactForm = document.getElementById('contactForm');
+            contactAlert = document.getElementById('contact-alert');
+            contactError = document.getElementById('contact-error');
+            
+            // Vérifier que tous les éléments essentiels sont chargés
+            const essentialElements = [
+                authModal, loginButtonHeader, registerButtonHeader, 
+                loginButtonMain, registerButtonMain, loginForm
+            ];
+            
+            const missingElements = essentialElements.filter(el => !el);
+            
+            if (missingElements.length > 0) {
+                console.warn('⚠️ Certains éléments DOM sont manquants:', missingElements);
+                setTimeout(initializeDOMElements, 100);
+                return false;
+            }
+            
+            console.log("✅ Tous les éléments DOM sont initialisés avec succès");
+            return true;
+        }
+
+        // =============================================
+        // INITIALISATION DE L'APPLICATION
         // =============================================
 
         document.addEventListener('DOMContentLoaded', async function() {
-            console.log("🚀 Initialisation de PrimeAcademia avec authentification...");
+            console.log("🚀 Initialisation de PrimeAcademia...");
+            
+            // Initialiser les éléments DOM
+            if (!initializeDOMElements()) {
+                console.error("❌ Échec de l'initialisation des éléments DOM");
+                return;
+            }
             
             // Vérifier l'état d'authentification
             await checkAuth();
@@ -3761,6 +3815,11 @@
             // Charger les livres (accessible sans connexion)
             loadBooks();
             
+            // Afficher le message de bienvenue pour les non-connectés
+            if (!currentUser && welcomeMessage) {
+                welcomeMessage.style.display = 'flex';
+            }
+            
             console.log("✅ PrimeAcademia initialisé avec succès");
         });
 
@@ -3770,19 +3829,26 @@
 
         async function checkAuth() {
             try {
+                console.log("🔐 Vérification de l'authentification...");
+                
                 // Vérifier la session Supabase
                 const { data: { session }, error } = await supabase.auth.getSession();
                 
-                if (error) throw error;
+                if (error) {
+                    console.error('Erreur de session Supabase:', error);
+                    throw error;
+                }
                 
                 if (session) {
                     // Utilisateur connecté
+                    console.log("✅ Utilisateur connecté:", session.user.email);
                     currentUser = session.user;
                     await loadUserProfile();
                     updateUIForLoggedInUser();
                     loadFiles(); // Charger les fichiers seulement si connecté
                 } else {
                     // Utilisateur non connecté
+                    console.log("👤 Utilisateur non connecté");
                     updateUIForGuest();
                 }
                 
@@ -3799,6 +3865,8 @@
             if (!currentUser) return;
             
             try {
+                console.log("👤 Chargement du profil utilisateur...");
+                
                 // Récupérer le profil utilisateur depuis Supabase
                 const { data: profile, error } = await supabase
                     .from('profiles')
@@ -3806,19 +3874,26 @@
                     .eq('id', currentUser.id)
                     .single();
                 
-                if (error && error.code !== 'PGRST116') throw error;
+                if (error && error.code !== 'PGRST116') {
+                    console.error('Erreur lors du chargement du profil:', error);
+                    throw error;
+                }
                 
                 if (profile) {
+                    console.log("✅ Profil utilisateur chargé:", profile);
+                    
                     // Mettre à jour l'affichage du profil
                     const firstName = profile.prenom || '';
                     const lastName = profile.nom || '';
                     const displayName = `${firstName} ${lastName}`.trim() || 'Utilisateur';
                     
-                    userName.textContent = displayName;
-                    userAvatar.textContent = (firstName[0] || lastName[0] || 'U').toUpperCase();
+                    if (userName) userName.textContent = displayName;
+                    if (userAvatar) userAvatar.textContent = (firstName[0] || lastName[0] || 'U').toUpperCase();
                     
                     // Stocker les informations du profil
                     currentUser.profile = profile;
+                } else {
+                    console.log("ℹ️ Aucun profil trouvé pour cet utilisateur");
                 }
                 
             } catch (error) {
@@ -3834,8 +3909,8 @@
                     .select('*', { count: 'exact', head: true });
                 
                 if (!error && count !== null) {
-                    totalUsersElement.textContent = count;
-                    totalUsersFooter.textContent = count;
+                    if (totalUsersElement) totalUsersElement.textContent = count;
+                    if (totalUsersFooter) totalUsersFooter.textContent = count;
                 }
             } catch (error) {
                 console.error('Erreur lors de la mise à jour des statistiques:', error);
@@ -3843,44 +3918,120 @@
         }
 
         // =============================================
-        // INSCRIPTION EN 4 ÉTAPES
+        // INSCRIPTION EN 4 ÉTAPES - CORRIGÉE
         // =============================================
 
         function setupAuthEventListeners() {
+            console.log("🎯 Configuration des écouteurs d'authentification...");
+            
             // Ouverture/fermeture du modal
-            [loginButtonHeader, registerButtonHeader, loginButtonMain, registerButtonMain].forEach(btn => {
-                if (btn) btn.addEventListener('click', openAuthModal);
+            const authButtons = [loginButtonHeader, registerButtonHeader, loginButtonMain, registerButtonMain];
+            authButtons.forEach(btn => {
+                if (btn) {
+                    btn.addEventListener('click', openAuthModal);
+                    console.log(`✅ Écouteur ajouté pour: ${btn.id}`);
+                }
             });
             
-            if (closeAuthModal) closeAuthModal.addEventListener('click', closeAuthModalHandler);
+            if (closeAuthModal) {
+                closeAuthModal.addEventListener('click', closeAuthModalHandler);
+                console.log("✅ Écouteur ajouté pour fermeture du modal");
+            }
             
             // Navigation entre formulaires
-            if (switchToLogin) switchToLogin.addEventListener('click', () => showForm('login'));
-            if (switchToRegister) switchToRegister.addEventListener('click', () => showForm('register-step-1'));
-            if (backToLogin) backToLogin.addEventListener('click', () => showForm('login'));
-            if (forgotPassword) forgotPassword.addEventListener('click', () => showForm('forgot-password'));
+            if (switchToLogin) {
+                switchToLogin.addEventListener('click', () => showForm('login'));
+                console.log("✅ Écouteur ajouté pour switchToLogin");
+            }
+            
+            if (switchToRegister) {
+                switchToRegister.addEventListener('click', () => showForm('register-step-1'));
+                console.log("✅ Écouteur ajouté pour switchToRegister");
+            }
+            
+            if (backToLogin) {
+                backToLogin.addEventListener('click', () => showForm('login'));
+                console.log("✅ Écouteur ajouté pour backToLogin");
+            }
+            
+            if (forgotPassword) {
+                forgotPassword.addEventListener('click', () => showForm('forgot-password'));
+                console.log("✅ Écouteur ajouté pour forgotPassword");
+            }
             
             // Navigation entre étapes d'inscription
-            if (nextStep1) nextStep1.addEventListener('click', validateStep1);
-            if (prevStep2) prevStep2.addEventListener('click', () => showForm('register-step-1'));
-            if (nextStep2) nextStep2.addEventListener('click', validateStep2);
-            if (prevStep3) prevStep3.addEventListener('click', () => showForm('register-step-2'));
-            if (nextStep3) nextStep3.addEventListener('click', validateStep3);
-            if (prevStep4) prevStep4.addEventListener('click', () => showForm('register-step-3'));
-            if (completeRegistration) completeRegistration.addEventListener('click', completeRegistrationProcess);
+            if (nextStep1) {
+                nextStep1.addEventListener('click', validateStep1);
+                console.log("✅ Écouteur ajouté pour nextStep1");
+            }
+            
+            if (prevStep2) {
+                prevStep2.addEventListener('click', () => showForm('register-step-1'));
+                console.log("✅ Écouteur ajouté pour prevStep2");
+            }
+            
+            if (nextStep2) {
+                nextStep2.addEventListener('click', validateStep2);
+                console.log("✅ Écouteur ajouté pour nextStep2");
+            }
+            
+            if (prevStep3) {
+                prevStep3.addEventListener('click', () => showForm('register-step-2'));
+                console.log("✅ Écouteur ajouté pour prevStep3");
+            }
+            
+            if (nextStep3) {
+                nextStep3.addEventListener('click', validateStep3);
+                console.log("✅ Écouteur ajouté pour nextStep3");
+            }
+            
+            if (prevStep4) {
+                prevStep4.addEventListener('click', () => showForm('register-step-3'));
+                console.log("✅ Écouteur ajouté pour prevStep4");
+            }
+            
+            if (completeRegistration) {
+                completeRegistration.addEventListener('click', completeRegistrationProcess);
+                console.log("✅ Écouteur ajouté pour completeRegistration");
+            }
             
             // Validation en temps réel
-            if (registerConfirm) registerConfirm.addEventListener('change', updateRegistrationSummary);
+            if (registerConfirm) {
+                registerConfirm.addEventListener('change', updateRegistrationSummary);
+                console.log("✅ Écouteur ajouté pour registerConfirm");
+            }
             
             // Soumission des formulaires
-            if (loginButton) loginButton.addEventListener('click', handleLogin);
-            if (resetPasswordButton) resetPasswordButton.addEventListener('click', handlePasswordReset);
+            if (loginButton) {
+                loginButton.addEventListener('click', handleLogin);
+                console.log("✅ Écouteur ajouté pour loginButton");
+            }
+            
+            if (resetPasswordButton) {
+                resetPasswordButton.addEventListener('click', handlePasswordReset);
+                console.log("✅ Écouteur ajouté pour resetPasswordButton");
+            }
             
             // Gestion du menu utilisateur
-            if (userAvatar) userAvatar.addEventListener('click', toggleUserMenu);
-            if (logoutButton) logoutButton.addEventListener('click', handleLogout);
-            if (viewProfile) viewProfile.addEventListener('click', viewUserProfile);
-            if (myDownloads) myDownloads.addEventListener('click', viewMyDownloads);
+            if (userAvatar) {
+                userAvatar.addEventListener('click', toggleUserMenu);
+                console.log("✅ Écouteur ajouté pour userAvatar");
+            }
+            
+            if (logoutButton) {
+                logoutButton.addEventListener('click', handleLogout);
+                console.log("✅ Écouteur ajouté pour logoutButton");
+            }
+            
+            if (viewProfile) {
+                viewProfile.addEventListener('click', viewUserProfile);
+                console.log("✅ Écouteur ajouté pour viewProfile");
+            }
+            
+            if (myDownloads) {
+                myDownloads.addEventListener('click', viewMyDownloads);
+                console.log("✅ Écouteur ajouté pour myDownloads");
+            }
             
             // Fermer le menu utilisateur en cliquant ailleurs
             document.addEventListener('click', (e) => {
@@ -3891,34 +4042,53 @@
             
             // Fermer le modal avec la touche Echap
             document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && authModal.classList.contains('active')) {
+                if (e.key === 'Escape' && authModal && authModal.classList.contains('active')) {
                     closeAuthModalHandler();
                 }
             });
             
             // Fermer le modal en cliquant en dehors
-            authModal.addEventListener('click', (e) => {
-                if (e.target === authModal) {
-                    closeAuthModalHandler();
-                }
-            });
+            if (authModal) {
+                authModal.addEventListener('click', (e) => {
+                    if (e.target === authModal) {
+                        closeAuthModalHandler();
+                    }
+                });
+                console.log("✅ Écouteur ajouté pour fermeture externe du modal");
+            }
+            
+            console.log("✅ Tous les écouteurs d'authentification sont configurés");
         }
 
         function openAuthModal() {
+            console.log("🔓 Ouverture du modal d'authentification");
+            
+            if (!authModal) {
+                console.error("❌ Modal d'authentification non trouvé");
+                return;
+            }
+            
             authModal.classList.add('active');
             document.body.style.overflow = 'hidden';
             showForm('login');
         }
 
         function closeAuthModalHandler() {
-            authModal.classList.remove('active');
+            console.log("🔒 Fermeture du modal d'authentification");
+            
+            if (authModal) {
+                authModal.classList.remove('active');
+            }
             document.body.style.overflow = '';
             resetRegistrationForm();
         }
 
         function showForm(formId) {
+            console.log(`📝 Affichage du formulaire: ${formId}`);
+            
             // Masquer tous les formulaires
-            [loginForm, registerStep1, registerStep2, registerStep3, registerStep4, forgotPasswordForm].forEach(form => {
+            const forms = [loginForm, registerStep1, registerStep2, registerStep3, registerStep4, forgotPasswordForm];
+            forms.forEach(form => {
                 if (form) form.classList.remove('active');
             });
             
@@ -3926,23 +4096,28 @@
             const formToShow = document.getElementById(formId);
             if (formToShow) {
                 formToShow.classList.add('active');
+                console.log(`✅ Formulaire ${formId} affiché`);
+            } else {
+                console.error(`❌ Formulaire ${formId} non trouvé`);
             }
         }
 
         // VALIDATION ÉTAPE 1: Informations personnelles
         function validateStep1() {
+            console.log("✅ Validation de l'étape 1");
+            
             // Validation des champs requis
-            if (!registerNom.value.trim()) {
+            if (!registerNom || !registerNom.value.trim()) {
                 showError('Veuillez entrer votre nom');
                 return;
             }
             
-            if (!registerPrenom.value.trim()) {
+            if (!registerPrenom || !registerPrenom.value.trim()) {
                 showError('Veuillez entrer votre prénom');
                 return;
             }
             
-            if (!registerEmail.value.trim()) {
+            if (!registerEmail || !registerEmail.value.trim()) {
                 showError('Veuillez entrer votre adresse email');
                 return;
             }
@@ -3952,7 +4127,7 @@
                 return;
             }
             
-            if (!registerPhone.value.trim()) {
+            if (!registerPhone || !registerPhone.value.trim()) {
                 showError('Veuillez entrer votre numéro de téléphone');
                 return;
             }
@@ -3963,9 +4138,11 @@
                 prenom: registerPrenom.value.trim(),
                 email: registerEmail.value.trim(),
                 phone: registerPhone.value.trim(),
-                birthdate: registerBirthdate.value,
-                gender: registerGender.value
+                birthdate: registerBirthdate ? registerBirthdate.value : '',
+                gender: registerGender ? registerGender.value : ''
             };
+            
+            console.log("📝 Données étape 1 enregistrées:", registrationData.step1);
             
             // Passer à l'étape 2
             showForm('register-step-2');
@@ -3973,12 +4150,14 @@
 
         // VALIDATION ÉTAPE 2: Informations académiques
         function validateStep2() {
-            if (!registerFiliere.value) {
+            console.log("✅ Validation de l'étape 2");
+            
+            if (!registerFiliere || !registerFiliere.value) {
                 showError('Veuillez sélectionner votre filière d\'études');
                 return;
             }
             
-            if (!registerNiveau.value) {
+            if (!registerNiveau || !registerNiveau.value) {
                 showError('Veuillez sélectionner votre niveau d\'études');
                 return;
             }
@@ -3987,11 +4166,13 @@
             registrationData.step2 = {
                 filiere: registerFiliere.value,
                 niveau: registerNiveau.value,
-                etablissement: registerEtablissement.value.trim(),
-                ville: registerVille.value.trim(),
-                objectif: registerObjectif.value,
-                matieres: registerMatieres.value.trim()
+                etablissement: registerEtablissement ? registerEtablissement.value.trim() : '',
+                ville: registerVille ? registerVille.value.trim() : '',
+                objectif: registerObjectif ? registerObjectif.value : '',
+                matieres: registerMatieres ? registerMatieres.value.trim() : ''
             };
+            
+            console.log("📝 Données étape 2 enregistrées:", registrationData.step2);
             
             // Passer à l'étape 3
             showForm('register-step-3');
@@ -3999,7 +4180,9 @@
 
         // VALIDATION ÉTAPE 3: Sécurité
         function validateStep3() {
-            if (!registerPassword.value) {
+            console.log("✅ Validation de l'étape 3");
+            
+            if (!registerPassword || !registerPassword.value) {
                 showError('Veuillez entrer un mot de passe');
                 return;
             }
@@ -4014,12 +4197,12 @@
                 return;
             }
             
-            if (registerPassword.value !== registerConfirmPassword.value) {
+            if (!registerConfirmPassword || registerPassword.value !== registerConfirmPassword.value) {
                 showError('Les mots de passe ne correspondent pas');
                 return;
             }
             
-            if (!registerTerms.checked) {
+            if (!registerTerms || !registerTerms.checked) {
                 showError('Vous devez accepter les conditions d\'utilisation');
                 return;
             }
@@ -4027,9 +4210,11 @@
             // Stocker les données de l'étape 3
             registrationData.step3 = {
                 password: registerPassword.value,
-                newsletter: registerNewsletter.checked,
+                newsletter: registerNewsletter ? registerNewsletter.checked : true,
                 termsAccepted: true
             };
+            
+            console.log("📝 Données étape 3 enregistrées");
             
             // Mettre à jour le récapitulatif et passer à l'étape 4
             updateRegistrationSummary();
@@ -4037,6 +4222,8 @@
         }
 
         function updateRegistrationSummary() {
+            console.log("📋 Mise à jour du récapitulatif d'inscription");
+            
             const summaryContent = document.getElementById('summary-content');
             if (!summaryContent) return;
             
@@ -4083,12 +4270,17 @@
             summaryContent.innerHTML = html;
             
             // Activer/désactiver le bouton de finalisation
-            if (completeRegistration) {
+            if (completeRegistration && registerConfirm) {
                 completeRegistration.disabled = !registerConfirm.checked;
+                console.log(`🎯 Bouton de finalisation ${completeRegistration.disabled ? 'désactivé' : 'activé'}`);
             }
         }
 
         async function completeRegistrationProcess() {
+            console.log("🚀 Début du processus d'inscription complet");
+            
+            if (!completeRegistration) return;
+            
             const btn = completeRegistration;
             const originalText = btn.innerHTML;
             
@@ -4097,6 +4289,7 @@
             
             try {
                 // Étape 1: Inscription avec Supabase Auth
+                console.log("📝 Inscription avec Supabase Auth...");
                 const { data: authData, error: authError } = await supabase.auth.signUp({
                     email: registrationData.step1.email,
                     password: registrationData.step3.password,
@@ -4109,9 +4302,14 @@
                     }
                 });
                 
-                if (authError) throw authError;
+                if (authError) {
+                    console.error("❌ Erreur d'inscription Supabase:", authError);
+                    throw authError;
+                }
                 
                 if (authData.user) {
+                    console.log("✅ Utilisateur créé avec succès:", authData.user.email);
+                    
                     // Étape 2: Création du profil utilisateur
                     const profileData = {
                         id: authData.user.id,
@@ -4128,16 +4326,23 @@
                         objectif: registrationData.step2.objectif || null,
                         matieres: registrationData.step2.matieres || null,
                         newsletter: registrationData.step3.newsletter,
-                        invite_code: registerInviteCode.value || null,
+                        invite_code: registerInviteCode ? registerInviteCode.value || null : null,
                         created_at: new Date().toISOString(),
                         last_login: new Date().toISOString()
                     };
+                    
+                    console.log("📝 Création du profil utilisateur:", profileData);
                     
                     const { error: profileError } = await supabase
                         .from('profiles')
                         .insert([profileData]);
                     
-                    if (profileError) throw profileError;
+                    if (profileError) {
+                        console.error("❌ Erreur de création du profil:", profileError);
+                        throw profileError;
+                    }
+                    
+                    console.log("✅ Profil utilisateur créé avec succès");
                     
                     // Succès
                     showSuccess('Compte créé avec succès ! Vous êtes maintenant connecté.');
@@ -4158,7 +4363,7 @@
                 }
                 
             } catch (error) {
-                console.error('Erreur lors de l\'inscription:', error);
+                console.error('❌ Erreur lors de l\'inscription:', error);
                 showError(error.message || 'Une erreur est survenue lors de l\'inscription');
             } finally {
                 btn.innerHTML = originalText;
@@ -4167,10 +4372,14 @@
         }
 
         // =============================================
-        // CONNEXION UTILISATEUR
+        // CONNEXION UTILISATEUR - CORRIGÉE
         // =============================================
 
         async function handleLogin() {
+            console.log("🔑 Tentative de connexion...");
+            
+            if (!loginButton) return;
+            
             const btn = loginButton;
             const originalText = btn.innerHTML;
             
@@ -4178,14 +4387,23 @@
             btn.disabled = true;
             
             try {
+                if (!loginEmail || !loginPassword) {
+                    throw new Error('Champs de connexion manquants');
+                }
+                
                 const { data, error } = await supabase.auth.signInWithPassword({
                     email: loginEmail.value.trim(),
                     password: loginPassword.value
                 });
                 
-                if (error) throw error;
+                if (error) {
+                    console.error("❌ Erreur de connexion:", error);
+                    throw error;
+                }
                 
                 if (data.user) {
+                    console.log("✅ Connexion réussie pour:", data.user.email);
+                    
                     // Succès
                     showSuccess('Connexion réussie !');
                     
@@ -4204,7 +4422,7 @@
                 }
                 
             } catch (error) {
-                console.error('Erreur lors de la connexion:', error);
+                console.error('❌ Erreur lors de la connexion:', error);
                 showError(error.message || 'Email ou mot de passe incorrect');
             } finally {
                 btn.innerHTML = originalText;
@@ -4217,6 +4435,8 @@
         // =============================================
 
         async function handlePasswordReset() {
+            if (!resetPasswordButton) return;
+            
             const btn = resetPasswordButton;
             const originalText = btn.innerHTML;
             
@@ -4247,10 +4467,15 @@
         // =============================================
 
         async function handleLogout() {
+            console.log("🚪 Tentative de déconnexion...");
+            
             try {
                 const { error } = await supabase.auth.signOut();
                 
-                if (error) throw error;
+                if (error) {
+                    console.error("❌ Erreur de déconnexion:", error);
+                    throw error;
+                }
                 
                 // Réinitialiser l'utilisateur
                 currentUser = null;
@@ -4259,12 +4484,13 @@
                 updateUIForGuest();
                 
                 // Fermer le menu utilisateur
-                userMenu.classList.remove('active');
+                if (userMenu) userMenu.classList.remove('active');
                 
+                console.log("✅ Déconnexion réussie");
                 showSuccess('Déconnexion réussie');
                 
             } catch (error) {
-                console.error('Erreur lors de la déconnexion:', error);
+                console.error('❌ Erreur lors de la déconnexion:', error);
                 showError('Erreur lors de la déconnexion');
             }
         }
@@ -4274,20 +4500,25 @@
         // =============================================
 
         function updateUIForLoggedInUser() {
+            console.log("🎨 Mise à jour de l'interface pour utilisateur connecté");
+            
             // Afficher le profil utilisateur
-            userProfile.style.display = 'flex';
-            authButtons.style.display = 'none';
+            if (userProfile) userProfile.style.display = 'flex';
+            if (authButtons) authButtons.style.display = 'none';
             
             // Masquer le message de bienvenue
-            welcomeMessage.style.display = 'none';
-            loginRequired.style.display = 'none';
+            if (welcomeMessage) welcomeMessage.style.display = 'none';
+            if (loginRequired) loginRequired.style.display = 'none';
             
             // Activer les filtres et la recherche
-            searchInput.disabled = false;
-            searchInput.placeholder = 'Rechercher un fichier...';
-            filiereFilter.disabled = false;
-            yearFilter.disabled = false;
-            semestreFilter.disabled = false;
+            if (searchInput) {
+                searchInput.disabled = false;
+                searchInput.placeholder = 'Rechercher un fichier...';
+            }
+            
+            if (filiereFilter) filiereFilter.disabled = false;
+            if (yearFilter) yearFilter.disabled = false;
+            if (semestreFilter) semestreFilter.disabled = false;
             
             // Mettre à jour les infos utilisateur
             if (currentUser && currentUser.profile) {
@@ -4296,28 +4527,36 @@
                 const lastName = profile.nom || '';
                 const displayName = `${firstName} ${lastName}`.trim() || 'Utilisateur';
                 
-                userName.textContent = displayName;
-                userAvatar.textContent = (firstName[0] || lastName[0] || 'U').toUpperCase();
+                if (userName) userName.textContent = displayName;
+                if (userAvatar) userAvatar.textContent = (firstName[0] || lastName[0] || 'U').toUpperCase();
             }
             
             // Mettre à jour les statistiques
             updateUserStats();
+            
+            console.log("✅ Interface mise à jour pour utilisateur connecté");
         }
 
         function updateUIForGuest() {
+            console.log("🎨 Mise à jour de l'interface pour invité");
+            
             // Afficher les boutons d'authentification
-            userProfile.style.display = 'none';
-            authButtons.style.display = 'flex';
+            if (userProfile) userProfile.style.display = 'none';
+            if (authButtons) authButtons.style.display = 'flex';
             
             // Afficher le message de bienvenue
-            welcomeMessage.style.display = 'flex';
-            loginRequired.style.display = 'block';
+            if (welcomeMessage) welcomeMessage.style.display = 'flex';
+            if (loginRequired) loginRequired.style.display = 'block';
             
             // Désactiver les filtres et la recherche
-            searchInput.disabled = true;
-            filiereFilter.disabled = true;
-            yearFilter.disabled = true;
-            semestreFilter.disabled = true;
+            if (searchInput) {
+                searchInput.disabled = true;
+                searchInput.placeholder = 'Connectez-vous pour activer la recherche';
+            }
+            
+            if (filiereFilter) filiereFilter.disabled = true;
+            if (yearFilter) yearFilter.disabled = true;
+            if (semestreFilter) semestreFilter.disabled = true;
             
             // Masquer le contenu des fichiers
             if (filesContent) filesContent.style.display = 'none';
@@ -4329,6 +4568,8 @@
             filesData = [];
             filteredFiles = [];
             if (filesGrid) filesGrid.innerHTML = '';
+            
+            console.log("✅ Interface mise à jour pour invité");
         }
 
         // =============================================
@@ -4341,6 +4582,8 @@
         }
 
         function showError(message) {
+            console.error("❌ Erreur:", message);
+            
             // Créer une notification toast
             const toast = document.createElement('div');
             toast.className = 'toast toast-error';
@@ -4358,6 +4601,8 @@
         }
 
         function showSuccess(message) {
+            console.log("✅ Succès:", message);
+            
             // Créer une notification toast
             const toast = document.createElement('div');
             toast.className = 'toast';
@@ -4375,6 +4620,8 @@
         }
 
         function resetRegistrationForm() {
+            console.log("🔄 Réinitialisation du formulaire d'inscription");
+            
             // Réinitialiser tous les champs du formulaire
             if (registerNom) registerNom.value = '';
             if (registerPrenom) registerPrenom.value = '';
@@ -4407,20 +4654,25 @@
         }
 
         function toggleUserMenu() {
-            userMenu.classList.toggle('active');
+            if (userMenu) {
+                userMenu.classList.toggle('active');
+                console.log(`🎯 Menu utilisateur ${userMenu.classList.contains('active') ? 'ouvert' : 'fermé'}`);
+            }
         }
 
         function viewUserProfile() {
             showInfo('Cette fonctionnalité sera disponible prochainement.');
-            userMenu.classList.remove('active');
+            if (userMenu) userMenu.classList.remove('active');
         }
 
         function viewMyDownloads() {
             showInfo('Cette fonctionnalité sera disponible prochainement.');
-            userMenu.classList.remove('active');
+            if (userMenu) userMenu.classList.remove('active');
         }
 
         function showInfo(message) {
+            console.log("ℹ️ Info:", message);
+            
             // Créer une notification toast
             const toast = document.createElement('div');
             toast.className = 'toast toast-info';
@@ -4470,6 +4722,8 @@
         // =============================================
 
         function setupAppEventListeners() {
+            console.log("🎯 Configuration des écouteurs d'application...");
+            
             // Navigation
             setupNavigation();
             
@@ -4490,14 +4744,19 @@
             
             // Pagination
             setupPagination();
+            
+            console.log("✅ Tous les écouteurs d'application sont configurés");
         }
 
         function setupNavigation() {
+            console.log("🗺️ Configuration de la navigation...");
+            
             // Navigation principale
             navLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
                     const page = this.getAttribute('data-page');
+                    console.log(`📄 Navigation vers: ${page}`);
                     switchPage(page);
                     setActiveNavLink(this);
                     
@@ -4512,6 +4771,7 @@
             if (logo) {
                 logo.addEventListener('click', function(e) {
                     e.preventDefault();
+                    console.log("🏠 Navigation vers l'accueil via le logo");
                     switchPage('home');
                     setActiveNavLink(document.querySelector('[data-page="home"]'));
                     
@@ -4527,37 +4787,64 @@
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
                     const page = this.getAttribute('data-page');
+                    console.log(`📄 Navigation footer vers: ${page}`);
                     switchPage(page);
                     const mainNavLink = document.querySelector(`nav [data-page="${page}"]`);
                     if (mainNavLink) setActiveNavLink(mainNavLink);
                 });
             });
+            
+            console.log("✅ Navigation configurée");
         }
 
         function setupIntroduction() {
-            // Section introduction
-            if (introCollapsed && introToggle) {
-                introCollapsed.addEventListener('click', function() {
-                    introCollapsed.style.display = 'none';
-                    introExpanded.style.display = 'block';
+            console.log("📖 Configuration de la section introduction...");
+            
+            // Section introduction - version corrigée
+            if (introCollapsed) {
+                introCollapsed.addEventListener('click', function(e) {
+                    // Empêcher le déclenchement si on clique sur le bouton
+                    if (e.target.closest('.intro-toggle')) return;
+                    
+                    console.log("📖 Ouverture de la section introduction");
+                    if (introCollapsed) introCollapsed.style.display = 'none';
+                    if (introExpanded) introExpanded.style.display = 'block';
                 });
+                console.log("✅ Écouteur ajouté pour introCollapsed");
+            }
+
+            if (introToggle) {
+                introToggle.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    console.log("📖 Ouverture via bouton toggle");
+                    if (introCollapsed) introCollapsed.style.display = 'none';
+                    if (introExpanded) introExpanded.style.display = 'block';
+                });
+                console.log("✅ Écouteur ajouté pour introToggle");
             }
 
             if (introClose) {
                 introClose.addEventListener('click', function(e) {
                     e.stopPropagation();
-                    introExpanded.style.display = 'none';
-                    introCollapsed.style.display = 'block';
+                    console.log("📖 Fermeture de la section introduction");
+                    if (introExpanded) introExpanded.style.display = 'none';
+                    if (introCollapsed) introCollapsed.style.display = 'block';
                 });
+                console.log("✅ Écouteur ajouté pour introClose");
             }
+            
+            console.log("✅ Section introduction configurée");
         }
 
         function setupArticles() {
+            console.log("📰 Configuration des articles...");
+            
             // Articles - lire la suite
             document.querySelectorAll('.read-more').forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
                     const article = this.getAttribute('data-article');
+                    console.log(`📖 Lecture de l'article: ${article}`);
                     switchPage(article);
                     setActiveNavLink(document.querySelector('[data-page="articles"]'));
                     
@@ -4572,6 +4859,7 @@
             document.querySelectorAll('.back-to-articles').forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
+                    console.log("📰 Retour aux articles");
                     switchPage('articles');
                     setActiveNavLink(document.querySelector('[data-page="articles"]'));
                     
@@ -4581,33 +4869,70 @@
                     }
                 });
             });
+            
+            console.log("✅ Articles configurés");
         }
 
         function setupFilters() {
+            console.log("🔍 Configuration des filtres...");
+            
             // Recherche et filtres
-            if (searchInput) searchInput.addEventListener('input', filterFiles);
-            if (filiereFilter) filiereFilter.addEventListener('change', filterFiles);
-            if (yearFilter) yearFilter.addEventListener('change', filterFiles);
-            if (semestreFilter) semestreFilter.addEventListener('change', filterFiles);
+            if (searchInput) {
+                searchInput.addEventListener('input', filterFiles);
+                console.log("✅ Écouteur ajouté pour searchInput");
+            }
+            
+            if (filiereFilter) {
+                filiereFilter.addEventListener('change', filterFiles);
+                console.log("✅ Écouteur ajouté pour filiereFilter");
+            }
+            
+            if (yearFilter) {
+                yearFilter.addEventListener('change', filterFiles);
+                console.log("✅ Écouteur ajouté pour yearFilter");
+            }
+            
+            if (semestreFilter) {
+                semestreFilter.addEventListener('change', filterFiles);
+                console.log("✅ Écouteur ajouté pour semestreFilter");
+            }
 
             // Boutons de rechargement
-            if (retryBtn) retryBtn.addEventListener('click', loadFiles);
-            if (booksRetryBtn) booksRetryBtn.addEventListener('click', loadBooks);
+            if (retryBtn) {
+                retryBtn.addEventListener('click', loadFiles);
+                console.log("✅ Écouteur ajouté pour retryBtn");
+            }
+            
+            if (booksRetryBtn) {
+                booksRetryBtn.addEventListener('click', loadBooks);
+                console.log("✅ Écouteur ajouté pour booksRetryBtn");
+            }
+            
+            console.log("✅ Filtres configurés");
         }
 
         function setupContactForm() {
+            console.log("📧 Configuration du formulaire de contact...");
+            
             if (contactForm) {
                 contactForm.addEventListener('submit', handleContactForm);
+                console.log("✅ Écouteur ajouté pour contactForm");
             }
+            
+            console.log("✅ Formulaire de contact configuré");
         }
 
         function setupBurgerMenu() {
+            console.log("🍔 Configuration du menu burger...");
+            
             if (menuToggle) {
                 menuToggle.addEventListener('click', toggleBurgerMenu);
+                console.log("✅ Écouteur ajouté pour menuToggle");
             }
             
             if (menuOverlay) {
                 menuOverlay.addEventListener('click', closeBurgerMenu);
+                console.log("✅ Écouteur ajouté pour menuOverlay");
             }
             
             // Fermer le menu en cliquant sur un lien
@@ -4621,24 +4946,47 @@
             
             // Fermer le menu en appuyant sur Echap
             document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && mainNav.classList.contains('active')) {
+                if (e.key === 'Escape' && mainNav && mainNav.classList.contains('active')) {
                     closeBurgerMenu();
                 }
             });
+            
+            console.log("✅ Menu burger configuré");
         }
 
         function setupPagination() {
+            console.log("📄 Configuration de la pagination...");
+            
             // Boutons de pagination
-            if (firstPageBtn) firstPageBtn.addEventListener('click', () => goToPage(1));
-            if (prevPageBtn) prevPageBtn.addEventListener('click', () => goToPage(currentPage - 1));
-            if (nextPageBtn) nextPageBtn.addEventListener('click', () => goToPage(currentPage + 1));
-            if (lastPageBtn) lastPageBtn.addEventListener('click', () => {
-                const totalPages = Math.ceil(filteredFiles.length / itemsPerPage);
-                goToPage(totalPages);
-            });
+            if (firstPageBtn) {
+                firstPageBtn.addEventListener('click', () => goToPage(1));
+                console.log("✅ Écouteur ajouté pour firstPageBtn");
+            }
+            
+            if (prevPageBtn) {
+                prevPageBtn.addEventListener('click', () => goToPage(currentPage - 1));
+                console.log("✅ Écouteur ajouté pour prevPageBtn");
+            }
+            
+            if (nextPageBtn) {
+                nextPageBtn.addEventListener('click', () => goToPage(currentPage + 1));
+                console.log("✅ Écouteur ajouté pour nextPageBtn");
+            }
+            
+            if (lastPageBtn) {
+                lastPageBtn.addEventListener('click', () => {
+                    const totalPages = Math.ceil(filteredFiles.length / itemsPerPage);
+                    goToPage(totalPages);
+                });
+                console.log("✅ Écouteur ajouté pour lastPageBtn");
+            }
+            
+            console.log("✅ Pagination configurée");
         }
 
         function toggleBurgerMenu() {
+            console.log("🍔 Basculer le menu burger");
+            
             if (mainNav.classList.contains('active')) {
                 closeBurgerMenu();
             } else {
@@ -4647,20 +4995,26 @@
         }
 
         function openBurgerMenu() {
-            mainNav.classList.add('active');
-            menuOverlay.classList.add('active');
-            menuToggle.classList.add('active');
+            console.log("🍔 Ouverture du menu burger");
+            
+            if (mainNav) mainNav.classList.add('active');
+            if (menuOverlay) menuOverlay.classList.add('active');
+            if (menuToggle) menuToggle.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
         function closeBurgerMenu() {
-            mainNav.classList.remove('active');
-            menuOverlay.classList.remove('active');
-            menuToggle.classList.remove('active');
+            console.log("🍔 Fermeture du menu burger");
+            
+            if (mainNav) mainNav.classList.remove('active');
+            if (menuOverlay) menuOverlay.classList.remove('active');
+            if (menuToggle) menuToggle.classList.remove('active');
             document.body.style.overflow = '';
         }
 
         function switchPage(page) {
+            console.log(`🔄 Changement de page vers: ${page}`);
+            
             pageSections.forEach(section => {
                 section.classList.remove('active');
             });
@@ -4669,12 +5023,16 @@
             if (pageId && document.getElementById(pageId)) {
                 document.getElementById(pageId).classList.add('active');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
+                console.log(`✅ Page ${page} affichée`);
+            } else {
+                console.error(`❌ Page ${page} non trouvée`);
             }
         }
 
         function setActiveNavLink(activeLink) {
             navLinks.forEach(link => link.classList.remove('active'));
             activeLink.classList.add('active');
+            console.log(`✅ Lien actif: ${activeLink.textContent}`);
         }
 
         // =============================================
@@ -4682,8 +5040,11 @@
         // =============================================
 
         async function loadFiles() {
+            console.log("📁 Chargement des fichiers...");
+            
             // Ne charger les fichiers que si l'utilisateur est connecté
             if (!currentUser) {
+                console.log("🔒 Utilisateur non connecté - accès refusé aux fichiers");
                 updateUIForGuest();
                 return;
             }
@@ -4699,13 +5060,17 @@
                 } else {
                     showContent();
                 }
+                
+                console.log(`✅ ${filesData.length} fichiers chargés avec succès`);
             } catch (error) {
-                console.error('Erreur lors du chargement des fichiers:', error);
+                console.error('❌ Erreur lors du chargement des fichiers:', error);
                 showFileError();
             }
         }
 
         async function fetchDriveFiles() {
+            console.log("☁️ Récupération des fichiers depuis Google Drive...");
+            
             filesData = [];
             let totalFiles = 0;
 
@@ -4714,11 +5079,13 @@
                     for (const [semestre, folderId] of Object.entries(semestres)) {
                         if (folderId && !folderId.includes('COLLEZ_ID')) {
                             try {
+                                console.log(`📂 Récupération: ${filiere}-${year}-${semestre}`);
                                 const files = await fetchFolderFiles(folderId, filiere, year, semestre);
                                 filesData.push(...files);
                                 totalFiles += files.length;
+                                console.log(`✅ ${files.length} fichiers récupérés`);
                             } catch (error) {
-                                console.warn(`Dossier ${filiere}-${year}-${semestre}:`, error.message);
+                                console.warn(`⚠️ Dossier ${filiere}-${year}-${semestre}: ${error.message}`);
                             }
                         }
                     }
@@ -4733,11 +5100,15 @@
                 `https://www.googleapis.com/drive/v3/files?q='${folderId}' in parents and trashed=false&key=${DRIVE_CONFIG.apiKey}&fields=files(id,name,mimeType,webViewLink,createdTime,modifiedTime,webContentLink)`
             );
 
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
 
             const data = await response.json();
             
-            if (!data.files || data.files.length === 0) return [];
+            if (!data.files || data.files.length === 0) {
+                return [];
+            }
 
             return data.files.map(file => ({
                 id: file.id,
@@ -4755,12 +5126,17 @@
         }
 
         function filterFiles() {
-            if (!currentUser) return;
+            if (!currentUser) {
+                console.log("🔒 Filtrage impossible - utilisateur non connecté");
+                return;
+            }
             
-            const searchTerm = searchInput.value.toLowerCase();
-            const selectedFiliere = filiereFilter.value;
-            const selectedYear = yearFilter.value;
-            const selectedSemestre = semestreFilter.value;
+            console.log("🔍 Filtrage des fichiers...");
+            
+            const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+            const selectedFiliere = filiereFilter ? filiereFilter.value : '';
+            const selectedYear = yearFilter ? yearFilter.value : '';
+            const selectedSemestre = semestreFilter ? semestreFilter.value : '';
 
             filteredFiles = filesData.filter(file => {
                 const matchesSearch = file.name.toLowerCase().includes(searchTerm);
@@ -4773,6 +5149,8 @@
 
             currentPage = 1;
             displayFiles();
+            
+            console.log(`✅ ${filteredFiles.length} fichiers après filtrage`);
         }
 
         function displayFiles() {
@@ -4785,7 +5163,10 @@
         }
 
         function displayFilesAsGrid(files) {
-            if (!filesGrid) return;
+            if (!filesGrid) {
+                console.error("❌ Grille de fichiers non trouvée");
+                return;
+            }
             
             filesGrid.innerHTML = '';
 
@@ -4836,6 +5217,8 @@
                 `;
                 filesGrid.appendChild(fileCard);
             });
+            
+            console.log(`✅ ${files.length} fichiers affichés dans la grille`);
         }
 
         // PAGINATION
@@ -4889,6 +5272,8 @@
         // =============================================
 
         async function downloadFile(fileId, fileName) {
+            console.log(`📥 Tentative de téléchargement: ${fileName}`);
+            
             // Vérifier que l'utilisateur est connecté
             if (!currentUser) {
                 showError('Veuillez vous connecter pour télécharger des fichiers');
@@ -5050,6 +5435,8 @@
         // =============================================
 
         async function loadBooks() {
+            console.log("📚 Chargement des livres...");
+            
             try {
                 showBooksLoading();
                 await fetchBooks();
@@ -5060,13 +5447,17 @@
                 } else {
                     showBooksContent();
                 }
+                
+                console.log(`✅ ${booksData.length} livres chargés`);
             } catch (error) {
-                console.error('Erreur lors du chargement des livres:', error);
+                console.error('❌ Erreur lors du chargement des livres:', error);
                 showBooksError();
             }
         }
 
         async function fetchBooks() {
+            console.log("☁️ Récupération des livres depuis Google Drive...");
+            
             booksData = [];
 
             try {
@@ -5074,7 +5465,9 @@
                     `https://www.googleapis.com/drive/v3/files?q='${LIBRAIRIE_CONFIG.folderId}' in parents and trashed=false&key=${LIBRAIRIE_CONFIG.apiKey}&fields=files(id,name,mimeType,webViewLink,createdTime,modifiedTime,thumbnailLink)`
                 );
 
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
 
                 const data = await response.json();
 
@@ -5098,13 +5491,16 @@
 
                 console.log(`📚 ${booksData.length} livres chargés`);
             } catch (error) {
-                console.error('Erreur lors du chargement des livres:', error);
+                console.error('❌ Erreur lors du chargement des livres:', error);
                 throw error;
             }
         }
 
         function displayBooks() {
-            if (!booksGrid) return;
+            if (!booksGrid) {
+                console.error("❌ Grille de livres non trouvée");
+                return;
+            }
             
             booksGrid.innerHTML = '';
 
@@ -5135,6 +5531,8 @@
                 `;
                 booksGrid.appendChild(bookCard);
             });
+            
+            console.log(`✅ ${booksData.length} livres affichés`);
         }
 
         function showBooksLoading() {
@@ -5280,8 +5678,7 @@
 
         window.downloadFile = downloadFile;
 
-        console.log("✅ Système d'authentification PrimeAcademia chargé avec succès");
+        console.log("🚀 PrimeAcademia complètement initialisé et prêt !");
     </script>
 </body>
 </html>
-
